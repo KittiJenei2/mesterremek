@@ -13,6 +13,8 @@ use App\Models\Idopontfoglalas;
 use App\Models\Napok;
 use App\Models\Beosztas;
 use App\Models\Szabadsagok;
+use Illuminate\Support\Facades\DB;
+
 
 class IdopontfoglalasController extends Controller
 {
@@ -39,6 +41,25 @@ class IdopontfoglalasController extends Controller
     
         return $napok[$english] ?? null;
     }
+
+    public function dolgozokSzolgaltatasAlapjan(Request $request)
+    {
+        $request->validate([
+            'szolgaltatas_id' => 'required|integer'
+        ]);
+
+        $szolgaltatas = Szolgaltatas::findOrFail($request->szolgaltatas_id);
+
+        // Lehetosegek_id alapján keresünk (kategória)
+        $dolgozok = DB::table('szolgaltatok')
+            ->join('dolgozo', 'szolgaltatok.dolgozo_id', '=', 'dolgozo.id')
+            ->where('szolgaltatok.lehetosegek_id', $szolgaltatas->lehetosegek_id)
+            ->select('dolgozo.id', 'dolgozo.nev')
+            ->get();
+
+        return response()->json($dolgozok);
+    }
+
 
 
     public function SzabadIdopontok(Request $request)
@@ -149,6 +170,69 @@ class IdopontfoglalasController extends Controller
 
     return response()->json(['uzenet' => 'Foglalás sikeresen mentve!']);
 }
+
+public function foglalhatoNapok(Request $request)
+{
+    $request->validate([
+        'dolgozo_id' => 'required|integer',
+        'szolgaltatas_id' => 'required|integer',
+    ]);
+
+    $dolgozoId = $request->dolgozo_id;
+    $szolgaltatasId = $request->szolgaltatas_id;
+
+    $szolgaltatas = Szolgaltatas::findOrFail($szolgaltatasId);
+
+    // Dolgozó munka napjai → nap ID-k
+    $munkanapok = Beosztas::where('dolgozo_id', $dolgozoId)
+        ->pluck('napok_id')
+        ->toArray();
+
+    // Szabadság intervallumok
+    $szabadsagok = Szabadsagok::where('dolgozo_id', $dolgozoId)->get();
+
+    $ma = now()->toDateString();
+    $egyHonap = now()->addMonths(1); // max 1 hónapot engedünk előre
+
+    $foglalhato = [];
+
+    $datum = now()->copy();
+    while ($datum <= $egyHonap) {
+
+        // 1) múlt kizárása
+        if ($datum->toDateString() < $ma) {
+            $datum->addDay();
+            continue;
+        }
+
+        // 2) dolgozó munkanapjai
+        $napId = $datum->dayOfWeekIso; // 1 = hétfő ... 7 = vasárnap
+        if (!in_array($napId, $munkanapok)) {
+            $datum->addDay();
+            continue;
+        }
+
+        // 3) szabadság kizárása
+        $szabad = false;
+        foreach ($szabadsagok as $szabadsag) {
+            if ($datum->between($szabadsag->datum_kezdes, $szabadsag->datum_vege)) {
+                $szabad = true;
+                break;
+            }
+        }
+        if ($szabad) {
+            $datum->addDay();
+            continue;
+        }
+
+        // Ha idáig eljutott → foglalható
+        $foglalhato[] = $datum->toDateString();
+        $datum->addDay();
+    }
+
+    return response()->json($foglalhato);
+}
+
 
 
 }

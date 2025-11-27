@@ -39,5 +39,7 @@ Route::delete('/profil/foglalas/{id}', [ProfileController::class, 'cancel'])
     Route::get('/profil/edit', [ProfileController::class, 'edit'])->middleware('auth')->name('profile.edit');
 Route::post('/profil/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 
+Route::get('/foglalhato-napok', [IdopontfoglalasController::class, 'foglalhatoNapok']);
+Route::get('/dolgozok-szolgaltatas-alapjan', [IdopontfoglalasController::class, 'dolgozokSzolgaltatasAlapjan']);
 
 

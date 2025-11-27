@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fresh szalon</title>
 
+    {{-- FLATPICKR CSS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-@yield('scripts')
 <body>
-    {{-- Menü --}}
+
+{{-- Menü --}}
 <nav class="navbar bg-light">
     <div class="container d-flex justify-content-between align-items-center">
         <a class="navbar-brand fw-bold" href="/">Fresh szalon</a>
@@ -55,19 +58,26 @@
     </div>
 </nav>
 
+{{-- Tartalom --}}
+<main class="py-4">
+    @yield('content')
+</main>
 
-    {{-- Tartalom --}}
-    <main class="py-4">
-        @yield('content')
-    </main>
+{{-- Lábléc --}}
+<footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+        <p>Fresh szalon &copy; {{ date('Y') }}</p>
+        <p>Cím: Szalon utca 1. | Telefon: +36 1 234 567 | Email: info@freshszalon.hu</p>
+    </div>
+</footer>
 
-    {{-- Lábléc --}}
-    <footer class="bg-dark text-white text-center py-3">
-        <div class="container">
-            <p>Fresh szalon &copy; {{ date('Y') }}</p>
-            <p>Cím: Szalon utca 1. | Telefon: +36 1 234 567 | Email: info@freshszalon.hu</p>
-        </div>
-    </footer>
+{{-- FLATPICKR JS --}}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/hu.js"></script>
+
+
+{{-- Oldal-specifikus JS --}}
+@yield('scripts')
 
 </body>
 </html>
