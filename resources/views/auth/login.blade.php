@@ -13,8 +13,16 @@
         <label>Jelszó:</label>
         <input type="password" name="jelszo" class="form-control" required>
 
-        <button class="btn btn-success mt-3">Bejelentkezés</button>
+        <button type="submit" class="btn btn-success mt-3">Bejelentkezés</button>
     </form>
+
+    <div class="text-center mt-4">
+        <small class="text-muted">
+            Nincs még profilod?
+            <a href="{{ route('register.show') }}" class="fw-bold">Regisztrálj!</a>
+        </small>
+    </div>
+
 
 </div>
 @endsection

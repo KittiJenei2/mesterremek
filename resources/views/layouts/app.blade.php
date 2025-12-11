@@ -9,6 +9,31 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+    .idopont-btn {
+        min-width: 90px;
+        transition: 0.2s;
+    }
+
+    .idopont-btn.active {
+        background-color: #198754 !important;
+        color: #fff !important;
+        border-color: #198754 !important;
+        transform: scale(1.08);
+    }
+
+    .idopont-btn:hover {
+        transform: scale(1.04);
+    }
+
+    .alert-custom {
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+</style>
+
 </head>
 
 <body>

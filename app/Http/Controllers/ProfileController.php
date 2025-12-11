@@ -23,16 +23,24 @@ class ProfileController extends Controller
 
     public function cancel($id)
 {
-    $foglalas = Idopontfoglalas::findOrFail($id);
+    $foglalas = Idopontfoglalas::where('id', $id)
+        ->where('felhasznalo_id', Auth::id())
+        ->first();
 
-    if ($foglalas->felhasznalo_id !== Auth::id()) {
-        return back()->with('error', 'Nincs jogosultságod törölni ezt a foglalást.');
+    if (!$foglalas) {
+        return response()->json(['uzenet' => 'Foglalás nem található!'], 404);
     }
 
-    $foglalas->delete();
+    if (strtotime($foglalas->datum) < strtotime('today')) {
+        return response()->json(['uzenet' => 'Múltbeli foglalást nem lehet lemondani!'], 400);
+    }
 
-    return back()->with('success', 'Foglalás sikeresen törölve.');
+    $foglalas->statuszok_id = 3; // pl. 3 = lemondva
+    $foglalas->save();
+
+    return response()->json(['uzenet' => 'A foglalás sikeresen le lett mondva.']);
 }
+
 
     public function edit()
     {
@@ -58,4 +66,6 @@ class ProfileController extends Controller
 
     return redirect()->route('profile.index')->with('success', 'Adatok módosítva!');
 }
+
+
 }

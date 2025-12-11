@@ -13,6 +13,8 @@ use App\Models\Idopontfoglalas;
 use App\Models\Napok;
 use App\Models\Beosztas;
 use App\Models\Szabadsagok;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\FoglalasLetrehozva;
 use Illuminate\Support\Facades\DB;
 
 
@@ -154,11 +156,19 @@ class IdopontfoglalasController extends Controller
         'ido_kezdes' => 'required'
     ]);
 
+    // Szolgáltatás lekérése
     $szolgaltatas = Szolgaltatas::findOrFail($request->szolgaltatas_id);
-    $idoVeg = Carbon::parse($request->ido_kezdes)->addMinutes($szolgaltatas->idotartam);
 
+    // Dolgozó lekérése
+    $dolgozo = Dolgozo::findOrFail($request->dolgozo_id);
+
+    // Időpont vége
+    $idoVeg = Carbon::parse($request->ido_kezdes)
+                ->addMinutes($szolgaltatas->idotartam);
+
+    // Foglalás mentése
     $foglalas = Idopontfoglalas::create([
-        'felhasznalo_id' => Auth::id(), 
+        'felhasznalo_id' => Auth::id(),
         'dolgozo_id' => $request->dolgozo_id,
         'szolgaltatasok_id' => $request->szolgaltatas_id,
         'datum' => $request->datum,
@@ -168,8 +178,22 @@ class IdopontfoglalasController extends Controller
         'foglalas_idopontja' => now()
     ]);
 
-    return response()->json(['uzenet' => 'Foglalás sikeresen mentve!']);
+    // --- EMAIL KÜLDÉS ---
+    Mail::to(Auth::user()->email)->send(
+        new FoglalasLetrehozva([
+            'nev' => Auth::user()->nev,
+            'szolgaltatas' => $szolgaltatas->nev,
+            'dolgozo' => $dolgozo->nev,
+            'datum' => $request->datum,
+            'ido' => $request->ido_kezdes
+        ])
+    );
+
+    return response()->json([
+        'uzenet' => 'Foglalás sikeresen mentve!'
+    ]);
 }
+
 
 public function foglalhatoNapok(Request $request)
 {

@@ -42,4 +42,8 @@ Route::post('/profil/update', [ProfileController::class, 'update'])->middleware(
 Route::get('/foglalhato-napok', [IdopontfoglalasController::class, 'foglalhatoNapok']);
 Route::get('/dolgozok-szolgaltatas-alapjan', [IdopontfoglalasController::class, 'dolgozokSzolgaltatasAlapjan']);
 
+Route::post('/foglalas/{id}/cancel', [ProfileController::class, 'cancel'])
+    ->middleware('auth')
+    ->name('profile.cancel');
+
 

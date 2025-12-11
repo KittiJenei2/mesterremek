@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+    window.isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+</script>
+
 <div class="container">
     <h2 class="text-center mb-4">Időpontfoglalás</h2>
 
@@ -179,7 +183,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 idopontokDiv.innerHTML = "";
 
                 if (!data.idopontok || data.idopontok.length === 0) {
-                    idopontokDiv.innerHTML = "<p class='text-danger'>Nincs elérhető időpont.</p>";
+                    idopontokDiv.innerHTML = `
+                <div class="alert alert-warning alert-custom">
+                    Erre a napra nem elérhető időpont.
+                </div>`;
+
                     foglalasBtn.disabled = true;
                     return;
                 }
@@ -209,6 +217,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- Foglalás küldése ---
     foglalasBtn.addEventListener("click", function () {
+
+        if (!window.isLoggedIn) {
+        window.location.href = "/login";
+        return;
+        }
 
         let szolg = szolgaltatasInput.value;
         let dolgozo = dolgozoInput.value;

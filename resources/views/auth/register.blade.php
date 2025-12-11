@@ -22,5 +22,12 @@
         <button class="btn btn-primary mt-3">Regisztráció</button>
     </form>
 
+    <div class="text-center mt-4">
+        <small class="text-muted">
+            Már van profilod?
+            <a href="{{ route('login.show') }}" class="fw-bold">Jelentkezz be!</a>
+        </small>
+    </div>
+
 </div>
 @endsection
