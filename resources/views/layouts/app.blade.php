@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fresh szalon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
     {{-- FLATPICKR CSS --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -32,6 +33,77 @@
         padding: 12px;
         margin-bottom: 15px;
     }
+
+    .dolgozo-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dolgozo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .hero-slide {
+        height: 85vh;
+        position: relative;
+    }
+
+    .hero-img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+    }
+
+    .carousel-caption {
+        z-index: 2; 
+        bottom: 0;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-up {
+        animation: fadeUp 1s ease-out forwards;
+        opacity: 0;
+    }
+
+    .delay-100 { animation-delay: 0.2s; }
+    .delay-200 { animation-delay: 0.4s; }
+    .brand-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #1b1b1b;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .brand-logo:hover {
+        color: #0d6efd;
+    }
+
+    .brand-italic {
+        font-style: italic;
+        font-weight: 400;
+        color: #555;
+    }
 </style>
 
 </head>
@@ -39,52 +111,59 @@
 <body>
 
 {{-- Menü --}}
-<nav class="navbar bg-light">
+<nav class="navbar navbar-light bg-light shadow-sm fixed-top">
     <div class="container d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold" href="/">Fresh szalon</a>
+        
+        {{-- Logó / Márkanév --}}
+        <a class="navbar-brand brand-logo" href="{{ route('home') }}">
+            Fresh <span class="brand-italic">szalon</span>
+        </a>
 
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Főoldal</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/szolgaltatasok">Szolgáltatások</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/idopontfoglalas">Időpontfoglalás</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/kapcsolat">Kapcsolat</a>
-            </li>
+        {{-- Dropdown Menü --}}
+        <div class="dropdown">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="mainMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Menü
+            </button>
+            
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="mainMenuDropdown">
+                {{-- Általános menüpontok --}}
+                <li><a class="dropdown-item" href="{{ route('home') }}">Főoldal</a></li>
+                <li><a class="dropdown-item" href="{{ route('szolgaltatasok.index') }}">Szolgáltatások</a></li>
+                <li><a class="dropdown-item" href="{{ route('idopontfoglalas.index') }}">Időpontfoglalás</a></li>
+                
+                {{-- Megjegyzés: A Kapcsolat route-ot nem láttam a web.php-ban, így hagyom sima linken --}}
+                <li><a class="dropdown-item" href="/kapcsolat">Kapcsolat</a></li>
 
-            @guest
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Bejelentkezés</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">Regisztráció</a>
-                </li>
-            @endguest
+                <li><hr class="dropdown-divider"></li>
 
-            @auth
-                <li class="nav-item">
-                    <a class="nav-link" href="/profil">Profil</a>
-                </li>
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                        @csrf
-                        <button class="btn btn-link nav-link p-0 m-0">
-                            Kijelentkezés
-                        </button>
-                    </form>
-                </li>
-            @endauth
-        </ul>
+                {{-- Vendég nézet --}}
+                @guest
+                    <li><a class="dropdown-item" href="{{ route('login') }}">Bejelentkezés</a></li>
+                    <li><a class="dropdown-item" href="{{ route('register') }}">Regisztráció</a></li>
+                @endguest
+
+                {{-- Bejelentkezett felhasználó --}}
+                @auth
+                    <li class="dropdown-header text-muted">Fiók: {{ Auth::user()->name }}</li>
+                    <li><a class="dropdown-item" href="{{ route('profile.index') }}">Profilom</a></li>
+                    
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item text-danger">
+                                Kijelentkezés
+                            </button>
+                        </form>
+                    </li>
+                @endauth
+            </ul>
+        </div>
+
     </div>
 </nav>
 
 {{-- Tartalom --}}
-<main class="py-4">
+<main class="py-4 pt-5 mt-4">
     @yield('content')
 </main>
 

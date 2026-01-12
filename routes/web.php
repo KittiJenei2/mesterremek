@@ -46,4 +46,6 @@ Route::post('/foglalas/{id}/cancel', [ProfileController::class, 'cancel'])
     ->middleware('auth')
     ->name('profile.cancel');
 
+Route::view('/kapcsolat', 'kapcsolat')->name('kapcsolat');
+
 
