@@ -20,12 +20,24 @@ class LehetosegSeeder extends Seeder
             ],
             [
                 'nev' => 'Kozmetikus',
-                'leiras' => 'Arckezelések, peeling, hidratálás, smink.'
+                'leiras' => 'Arckezelések, peeling, hidratálás.'
             ],
             [
                 'nev' => 'Masszőr',
                 'leiras' => 'Teljes testmasszázs, relaxációs és sportmasszázs.'
             ],
+            [
+                'nev' => 'Körmös',
+                'leiras' => 'Manikűr, pedikűr, kézápolás egy helyen.'
+            ],
+            [
+                'nev' => 'Sminkes',
+                'leiras' => 'Esküvő? Szalagavató? Hétköznapok könnyítése? Keresd szakembereinket.'
+            ],
+            [
+                'nev' => 'Barber',
+                'leiras' => 'Kifejezetten férfiak számára: szakáll, bajusz, haj igazítás.'
+            ]
         ]);
     }
 }

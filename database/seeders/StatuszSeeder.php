@@ -13,7 +13,7 @@ class StatuszSeeder extends Seeder
      */
     public function run(): void
     {
-        $statuszok = ['Függőben', 'Elfogadva', 'Elutasítva'];
+        $statuszok = ['Függőben', 'Elfogadva', 'Elutasítva', 'Elvégezve'];
 
         foreach ($statuszok as $stat) {
             DB::table('statuszok')->insert([
