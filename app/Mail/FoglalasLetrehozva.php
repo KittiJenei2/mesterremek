@@ -12,6 +12,7 @@ use Illuminate\Queue\SerializesModels;
 class FoglalasLetrehozva extends Mailable
 {
     use Queueable, SerializesModels;
+
     public $adatok;
 
     /**
@@ -28,7 +29,7 @@ class FoglalasLetrehozva extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Foglalas Letrehozva',
+            subject: 'Foglalás visszaigazolása', // Itt állítjuk a tárgyat
         );
     }
 
@@ -38,23 +39,15 @@ class FoglalasLetrehozva extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.foglalas', // Itt állítjuk a nézetet (view.name helyett)
         );
     }
 
     /**
      * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
     public function attachments(): array
     {
         return [];
-    }
-
-    public function build()
-    {
-        return $this->subject('Foglalás visszaigazolása')
-                    ->view('emails.foglalas');
     }
 }
