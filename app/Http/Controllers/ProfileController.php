@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Idopontfoglalas;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
@@ -67,6 +69,31 @@ class ProfileController extends Controller
 
     return redirect()->route('profile.index')->with('success', 'Adatok módosítva!');
 }
+
+public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:6|confirmed', // confirmed = keresi a password_confirmation mezőt
+        ]);
+
+        /** @var \App\Models\Felhasznalo $user */
+        $user = Auth::user();
+
+        // 1. Ellenőrizzük, hogy a beírt "Jelenlegi jelszó" egyezik-e az adatbázisban lévővel
+        // Mivel nálad 'jelszo' a mező neve az adatbázisban, így hivatkozunk rá: $user->jelszo
+        if (!Hash::check($request->current_password, $user->jelszo)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['A megadott jelenlegi jelszó helytelen.'],
+            ]);
+        }
+
+        // 2. Ha jó volt a régi, mentsük el az újat (titkosítva!)
+        $user->jelszo = Hash::make($request->password);
+        $user->save();
+
+        return back()->with('success', 'A jelszó sikeresen módosítva!');
+    }
 
 
 }
