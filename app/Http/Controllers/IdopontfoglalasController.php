@@ -22,11 +22,13 @@ class IdopontfoglalasController extends Controller
 {
     public function index()
     {
+        $lehetosegek = Lehetoseg::all();
+
         $szolgaltatasok = Szolgaltatas::with('kategoria')->get();
 
         $dolgozok = Dolgozo::all();
 
-        return view('idopontfoglalas.index', compact('szolgaltatasok','dolgozok'));
+        return view('idopontfoglalas.index', compact('szolgaltatasok','dolgozok', 'lehetosegek'));
     }
     private function convertDay($english)
     {
@@ -42,6 +44,17 @@ class IdopontfoglalasController extends Controller
         ];
     
         return $napok[$english] ?? null;
+    }
+
+    public function szolgaltatasokKategoriaAlapjan(Request $request)
+    {
+        $request->validate([
+            'lehetoseg_id' => 'required|integer'
+        ]);
+
+        $szolgaltatasok = Szolgaltatas::where('lehetosegek_id', $request->lehetoseg_id)->get();
+
+        return response()->json($szolgaltatasok);
     }
 
     public function dolgozokSzolgaltatasAlapjan(Request $request)

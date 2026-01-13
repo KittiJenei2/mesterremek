@@ -44,7 +44,7 @@
                                 <input type="email" class="form-control rounded-3 @error('email') is-invalid @enderror" 
                                        id="email" name="email" placeholder="name@example.com" 
                                        value="{{ old('email') }}" required autofocus>
-                                <label for="email">Email cím</label>
+                                <label for="email">E-mail cím</label>
                                 @error('email')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -54,10 +54,10 @@
 
                             {{-- Jelszó --}}
                             <div class="form-floating mb-3">
-                                <input type="password" class="form-control rounded-3 @error('password') is-invalid @enderror" 
-                                       id="password" name="password" placeholder="Jelszó" required>
-                                <label for="password">Jelszó</label>
-                                @error('password')
+                                <input type="password" class="form-control rounded-3 @error('jelszo') is-invalid @enderror" 
+                                       id="jelszo" name="jelszo" placeholder="Jelszó" required>
+                                <label for="jelszo">Jelszó</label>
+                                @error('jelszo')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

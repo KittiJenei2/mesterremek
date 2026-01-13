@@ -30,24 +30,34 @@
                     <form id="bookingForm">
                         @csrf
 
-                        {{-- 1. Szolgáltatás kiválasztása --}}
+                        {{-- 1. Kategória kiválasztása --}}
                         <div class="mb-4">
-                            <label for="szolgaltatas_id" class="form-label fw-bold text-uppercase text-muted small">1. Válassz szolgáltatást</label>
-                            <select class="form-select form-select-lg shadow-sm border-0 bg-light" id="szolgaltatas_id" name="szolgaltatas_id" required>
+                            <label for="lehetoseg_id" class="form-label fw-bold text-uppercase text-muted small">1. Válassz kategóriát</label>
+                            <select class="form-select form-select-lg shadow-sm border-0 bg-light" id="lehetoseg_id" name="lehetoseg_id" required>
                                 <option value="" selected disabled>-- Kérjük válassz --</option>
-                                @foreach($szolgaltatasok as $szolgaltatas)
-                                    <option value="{{ $szolgaltatas->id }}" 
-                                            data-duration="{{ $szolgaltatas->idotartam }}"
-                                            {{ request('service_id') == $szolgaltatas->id ? 'selected' : '' }}>
-                                        {{ $szolgaltatas->nev }} ({{ $szolgaltatas->idotartam }} perc) - {{ number_format($szolgaltatas->ar, 0, ',', ' ') }} Ft
-                                    </option>
+                                @foreach ($lehetosegek as $lehetoseg)
+                                    <option value="{{ $lehetoseg->id }}">{{ $lehetoseg->nev }}</option>
                                 @endforeach
                             </select>
                         </div>
 
-                        {{-- 2. Dolgozó kiválasztása --}}
+                        {{-- 2. Szolgáltatás kiválasztása --}}
+                        <div class="mb-4 d-none" id="step_szolgaltatas">
+                                <label for="szolgaltatas_id" class="form-label fw-bold text-uppercase text-muted                        small">2. Válassz szolgáltatást</label>
+                                <div class="position-relative">
+                                    <select class="form-select form-select-lg shadow-sm border-0 bg-light"                      id="szolgaltatas_id" name="szolgaltatas_id" required disabled>
+                                        <option value="" selected disabled>-- Válassz előbb kategóriát --</option>
+                                    </select>
+
+                                    <div id="szolgaltatasLoader" class="position-absolute top-50 end-0                         translate-middle-y me-3 d-none">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></                     div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        {{-- 3. Dolgozó kiválasztása --}}
                         <div class="mb-4 d-none" id="step_dolgozo">
-                            <label for="dolgozo_id" class="form-label fw-bold text-uppercase text-muted small">2. Válassz szakembert</label>
+                            <label for="dolgozo_id" class="form-label fw-bold text-uppercase text-muted small">3. Válassz szakembert</label>
                             <div class="position-relative">
                                 <select class="form-select form-select-lg shadow-sm border-0 bg-light" id="dolgozo_id" name="dolgozo_id" required disabled>
                                     <option value="" selected disabled>-- Válassz előbb szolgáltatást --</option>
@@ -59,9 +69,9 @@
                             </div>
                         </div>
 
-                        {{-- 3. Dátum kiválasztása --}}
+                        {{-- 4. Dátum kiválasztása --}}
                         <div class="mb-4 d-none" id="step_datum">
-                            <label for="datum" class="form-label fw-bold text-uppercase text-muted small">3. Válassz napot</label>
+                            <label for="datum" class="form-label fw-bold text-uppercase text-muted small">4. Válassz napot</label>
                             <div class="input-group input-group-lg shadow-sm">
                                 <span class="input-group-text bg-white border-0"><i class="text-primary">📅</i></span>
                                 <input type="text" class="form-control border-0 bg-light flatpickr-input" id="datum" name="datum" placeholder="Kattints a naptárért..." readonly required disabled>
@@ -69,9 +79,9 @@
                             <small class="text-muted fst-italic mt-2 d-block">* Csak a szabad napok választhatók.</small>
                         </div>
 
-                        {{-- 4. Időpont kiválasztása --}}
+                        {{-- 5. Időpont kiválasztása --}}
                         <div class="mb-4 d-none" id="step_ido">
-                            <label class="form-label fw-bold text-uppercase text-muted small mb-3">4. Válassz szabad időpontot</label>
+                            <label class="form-label fw-bold text-uppercase text-muted small mb-3">5. Válassz szabad időpontot</label>
                             
                             <div id="idopontokContainer" class="d-flex flex-wrap gap-2 justify-content-center p-3 bg-light rounded shadow-inner" style="min-height: 100px;">
                                 <p class="text-muted m-auto">Válassz dátumot az időpontok betöltéséhez...</p>
@@ -103,6 +113,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // Elemek kiválasztása
+    const kategoriaSelect = document.getElementById('lehetoseg_id'); // ÚJ
     const szolgaltatasSelect = document.getElementById('szolgaltatas_id');
     const dolgozoSelect = document.getElementById('dolgozo_id');
     const datumInput = document.getElementById('datum');
@@ -111,39 +122,81 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const alertBox = document.getElementById('alertMessage');
 
-    // Szakaszok (div-ek)
+    // Szakaszok
+    const stepSzolgaltatas = document.getElementById('step_szolgaltatas'); // ÚJ
     const stepDolgozo = document.getElementById('step_dolgozo');
     const stepDatum = document.getElementById('step_datum');
     const stepIdo = document.getElementById('step_ido');
+    
+    // Loaderek
+    const szolgaltatasLoader = document.getElementById('szolgaltatasLoader'); // ÚJ
     const dolgozoLoader = document.getElementById('dolgozoLoader');
 
     let fp = null; // Flatpickr instance
 
-    // --- 1. HA VAN ELŐVÁLASZTOTT SZOLGÁLTATÁS (URL-ből) ---
-    if (szolgaltatasSelect.value) {
-        handleSzolgaltatasChange();
-    }
+    // --- 1. KATEGÓRIA VÁLTÁSAKOR -> SZOLGÁLTATÁSOK LEKÉRÉSE ---
+    kategoriaSelect.addEventListener('change', function() {
+        const kategoriaId = this.value;
+        if(!kategoriaId) return;
 
-    // --- 2. SZOLGÁLTATÁS VÁLTÁSAKOR ---
+        // Reset
+        resetSzolgaltatas();
+        resetDolgozo();
+        resetDatum();
+        resetIdo();
+
+        // UI megjelenítés
+        stepSzolgaltatas.classList.remove('d-none');
+        szolgaltatasLoader.classList.remove('d-none'); // Loader bekapcs
+        szolgaltatasSelect.disabled = true;
+
+        fetch(`/szolgaltatasok-kategoria-alapjan?lehetoseg_id=${kategoriaId}`)
+            .then(response => {
+                if (!response.ok) { throw new Error("Hálózati hiba vagy hiányzó útvonal (404)"); }
+                return response.json();
+            })
+            .then(data => {
+                szolgaltatasSelect.innerHTML = '<option value="" selected disabled>-- Válassz szolgáltatást --</option>';
+                
+                if(data.length === 0) {
+                     szolgaltatasSelect.innerHTML += '<option value="" disabled>Nincs elérhető szolgáltatás</option>';
+                }
+
+                data.forEach(szolg => {
+                    const ar = new Intl.NumberFormat('hu-HU').format(szolg.ar);
+                    szolgaltatasSelect.innerHTML += `
+                        <option value="${szolg.id}" data-duration="${szolg.idotartam}">
+                            ${szolg.nev} (${szolg.idotartam} perc) - ${ar} Ft
+                        </option>`;
+                });
+                szolgaltatasSelect.disabled = false;
+            })
+            .catch(error => {
+                console.error('Hiba:', error);
+                alert("Hiba történt a szolgáltatások betöltésekor! Részletek a konzolban (F12).");
+            })
+            .finally(() => {
+                // Ez mindenképpen lefut, akár sikerült, akár nem -> Eltüntetjük a loadert
+                szolgaltatasLoader.classList.add('d-none');
+            });
+    });
+
+    // --- 2. SZOLGÁLTATÁS VÁLTÁSAKOR -> DOLGOZÓK LEKÉRÉSE ---
     szolgaltatasSelect.addEventListener('change', handleSzolgaltatasChange);
 
     function handleSzolgaltatasChange() {
         const serviceId = szolgaltatasSelect.value;
         if(!serviceId) return;
 
-        // Reset
-        dolgozoSelect.innerHTML = '<option value="" selected disabled>Betöltés...</option>';
-        dolgozoSelect.disabled = true;
-        datumInput.disabled = true;
-        datumInput.value = '';
-        idopontokContainer.innerHTML = '';
-        stepDatum.classList.add('d-none');
-        stepIdo.classList.add('d-none');
-        submitBtn.classList.add('disabled');
+        // Resetelünk mindent, ami ezután jön
+        resetDolgozo();
+        resetDatum();
+        resetIdo();
         
         // UI megjelenítés
         stepDolgozo.classList.remove('d-none');
         dolgozoLoader.classList.remove('d-none');
+        dolgozoSelect.disabled = true;
 
         // Fetch Dolgozók
         fetch(`/dolgozok-szolgaltatas-alapjan?szolgaltatas_id=${serviceId}`)
@@ -166,12 +219,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if(!dolgozoId) return;
 
-        // Reset
-        datumInput.value = '';
-        datumInput.disabled = true;
-        idopontokContainer.innerHTML = '';
-        stepIdo.classList.add('d-none');
-        submitBtn.classList.add('disabled');
+        resetDatum();
+        resetIdo();
         
         stepDatum.classList.remove('d-none');
 
@@ -179,13 +228,12 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/foglalhato-napok?dolgozo_id=${dolgozoId}&szolgaltatas_id=${serviceId}`)
             .then(res => res.json())
             .then(dates => {
-                // Flatpickr inicializálása vagy frissítése
                 if(fp) fp.destroy();
                 
                 fp = flatpickr(datumInput, {
                     locale: "hu",
                     minDate: "today",
-                    enable: dates, // Csak ezeket a napokat engedélyezzük
+                    enable: dates,
                     dateFormat: "Y-m-d",
                     disableMobile: "true",
                     onChange: function(selectedDates, dateStr, instance) {
@@ -205,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         stepIdo.classList.remove('d-none');
         idopontokContainer.innerHTML = '<div class="spinner-border text-primary" role="status"></div>';
+        submitBtn.classList.add('disabled');
 
         fetch('/idopontfoglalas/szabad-idopontok', {
             method: 'POST',
@@ -233,14 +282,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.className = 'btn btn-outline-dark m-1 idopont-btn fw-bold';
                 btn.innerText = time;
                 btn.onclick = function() {
-                    // Kijelölés kezelése
                     document.querySelectorAll('.idopont-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    // Input kitöltése
                     idoInput.value = time;
-                    
-                    // Submit gomb engedélyezése
                     submitBtn.classList.remove('disabled');
                     submitBtn.innerText = `Foglalás: ${dateStr} ${time}`;
                 };
@@ -249,29 +293,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- 5. FORM BEKÜLDÉSE (AJAX) ---
+    // --- SEGÉDFÜGGVÉNYEK (RESET) ---
+    function resetSzolgaltatas() {
+        szolgaltatasSelect.innerHTML = '<option value="" selected disabled>Betöltés...</option>';
+        szolgaltatasSelect.disabled = true;
+        stepSzolgaltatas.classList.add('d-none');
+    }
+    function resetDolgozo() {
+        dolgozoSelect.innerHTML = '<option value="" selected disabled>-- Válassz előbb szolgáltatást --</option>';
+        dolgozoSelect.disabled = true;
+        stepDolgozo.classList.add('d-none');
+    }
+    function resetDatum() {
+        datumInput.disabled = true;
+        datumInput.value = '';
+        if(fp) fp.clear();
+        stepDatum.classList.add('d-none');
+    }
+    function resetIdo() {
+        idopontokContainer.innerHTML = '';
+        idoInput.value = '';
+        stepIdo.classList.add('d-none');
+        submitBtn.classList.add('disabled');
+        submitBtn.innerText = 'Foglalás véglegesítése';
+    }
+
+    // --- FORM BEKÜLDÉSE (VÁLTOZATLAN) ---
     const form = document.getElementById('bookingForm');
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Ellenőrzés: be van-e jelentkezve? (Ha a backend 401-et dob, kezeljük)
-        const formData = new FormData(this);
-        // Dátum hozzáadása manuálisan, ha a flatpickr kavarna (de az input value jó kell legyen)
-        
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Feldolgozás...';
+        const formData = new FormData(this);
 
         fetch('/idopontfoglalas/store', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                'Accept': 'application/json' // Fontos, hogy JSON-t várjunk hiba esetén is
+                'Accept': 'application/json'
             },
             body: formData
         })
         .then(response => {
             if (response.status === 401) {
-                // Nincs bejelentkezve
                 window.location.href = "/login"; 
                 throw new Error("Kérjük jelentkezz be!");
             }
@@ -279,16 +344,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-            // SIKER
             alertBox.className = 'alert alert-success alert-custom show';
             alertBox.innerHTML = `<strong>Siker!</strong> ${data.uzenet}`;
             alertBox.classList.remove('d-none');
-            
-            // Form elrejtése vagy reset
             form.reset();
-            idopontokContainer.innerHTML = '';
-            submitBtn.innerText = 'Foglalás véglegesítése';
-            // Opcionális: görgetés az üzenethez
+            // Mivel reseteltük a formot, manuálisan vissza kell állítani a mezőket alaphelyzetbe
+            kategoriaSelect.value = "";
+            resetSzolgaltatas();
+            resetDolgozo();
+            resetDatum();
+            resetIdo();
+            
             alertBox.scrollIntoView({ behavior: 'smooth' });
         })
         .catch(error => {

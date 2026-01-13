@@ -82,20 +82,21 @@
                                 @enderror
                             </div>
 
+                            {{-- E-mail cím --}}
                             <div class="form-floating mb-3">
-    <input type="text"
-           class="form-control rounded-3 @error('telefonszam') is-invalid @enderror"
-           id="telefonszam"
-           name="telefonszam"
-           placeholder="Telefonszám"
-           value="{{ old('telefonszam') }}"
-           required>
-    <label for="telefonszam">Telefonszám</label>
+                                <input type="text"
+                                       class="form-control rounded-3 @error('telefonszam') is-invalid @enderror"
+                                       id="telefonszam"
+                                       name="telefonszam"
+                                       placeholder="Telefonszám"
+                                       value="{{ old('telefonszam') }}"
+                                       required>
+                                <label for="telefonszam">Telefonszám</label>
 
-    @error('telefonszam')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-</div>
+                                @error('telefonszam')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
 
                             {{-- Gomb --}}

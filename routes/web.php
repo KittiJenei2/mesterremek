@@ -48,4 +48,6 @@ Route::post('/foglalas/{id}/cancel', [ProfileController::class, 'cancel'])
 
 Route::view('/kapcsolat', 'kapcsolat')->name('kapcsolat');
 
+Route::get('/szolgaltatasok-kategoria-alapjan', [IdopontfoglalasController::class, 'szolgaltatasokKategoriaAlapjan']);
+
 
