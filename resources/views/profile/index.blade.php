@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container mt-4">
 
@@ -80,28 +81,61 @@
 <script>
 document.addEventListener("click", function(e) {
 
+    // Csak akkor fusson le, ha a "lemondBtn" osztályú gombra kattintottak
     if (!e.target.classList.contains("lemondBtn")) return;
 
     const id = e.target.dataset.id;
 
-    if (!confirm("Biztosan le szeretnéd mondani a foglalást?")) return;
-
-    fetch(`/foglalas/${id}/cancel`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
+    // Szép megerősítő ablak (SweetAlert2)
+    Swal.fire({
+        title: 'Biztosan lemondod?',
+        text: "A foglalás véglegesen törlődik!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Igen, törlöm!',
+        cancelButtonText: 'Mégsem'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            
+            // Ha igent nyomott, indul a kérés
+            fetch(`/foglalas/${id}/cancel`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+            })
+            .then(res => {
+                if (!res.ok) { 
+                    // Ha a szerver hibát dob (pl. 400 vagy 404), itt kapjuk el
+                    return res.json().then(json => { throw new Error(json.uzenet || 'Hiba történt') });
+                }
+                return res.json();
+            })
+            .then(data => {
+                // SIKERES TÖRLÉS -> Szép üzenet
+                Swal.fire(
+                    'Törölve!',
+                    data.uzenet,
+                    'success'
+                ).then(() => {
+                    // Ha leokézta az üzenetet, újratöltjük az oldalt
+                    location.reload();
+                });
+            })
+            .catch(err => {
+                // HIBA -> Szép hibaüzenet
+                Swal.fire(
+                    'Hiba!',
+                    err.message,
+                    'error'
+                );
+                console.error(err);
+            });
+        }
     })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.uzenet);
-        location.reload();
-    })
-    .catch(err => {
-        alert("Hiba történt a lemondás során.");
-        console.error(err);
-    });
 
 });
 </script>

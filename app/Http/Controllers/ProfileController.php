@@ -22,25 +22,26 @@ class ProfileController extends Controller
     }
 
     public function cancel($id)
-{
-    $foglalas = Idopontfoglalas::where('id', $id)
-        ->where('felhasznalo_id', Auth::id())
-        ->first();
+    {
+        $foglalas = Idopontfoglalas::where('id', $id)
+            ->where('felhasznalo_id', Auth::id())
+            ->first();
 
-    if (!$foglalas) {
-        return response()->json(['uzenet' => 'Foglalás nem található!'], 404);
+        if (!$foglalas) {
+            // 404-es hibakódot küldünk, ha nincs meg
+            return response()->json(['uzenet' => 'Foglalás nem található!'], 404);
+        }
+
+        if (strtotime($foglalas->datum) < strtotime('today')) {
+            // 400-as hibakódot küldünk, ha múltbeli
+            return response()->json(['uzenet' => 'Múltbeli foglalást nem lehet lemondani!'], 400);
+        }
+
+        // --- ITT A VÁLTOZÁS: Töröljük a rekordot, nem csak a státuszt írjuk át ---
+        $foglalas->delete(); 
+
+        return response()->json(['uzenet' => 'A foglalás sikeresen törölve.']);
     }
-
-    if (strtotime($foglalas->datum) < strtotime('today')) {
-        return response()->json(['uzenet' => 'Múltbeli foglalást nem lehet lemondani!'], 400);
-    }
-
-    $foglalas->statuszok_id = 3; // pl. 3 = lemondva
-    $foglalas->save();
-
-    return response()->json(['uzenet' => 'A foglalás sikeresen le lett mondva.']);
-}
-
 
     public function edit()
     {
