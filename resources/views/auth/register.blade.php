@@ -34,11 +34,11 @@
 
                             {{-- Név --}}
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control rounded-3 @error('name') is-invalid @enderror" 
-                                       id="name" name="name" placeholder="Teljes név" 
+                                <input type="text" class="form-control rounded-3 @error('nev') is-invalid @enderror" 
+                                       id="nev" name="nev" placeholder="Teljes név" 
                                        value="{{ old('name') }}" required autofocus autocomplete="name">
-                                <label for="name">Teljes név</label>
-                                @error('name')
+                                <label for="nev">Teljes név</label>
+                                @error('nev')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -60,10 +60,10 @@
 
                             {{-- Jelszó --}}
                             <div class="form-floating mb-3">
-                                <input type="password" class="form-control rounded-3 @error('password') is-invalid @enderror" 
-                                       id="password" name="password" placeholder="Jelszó" required autocomplete="new-password">
-                                <label for="password">Jelszó</label>
-                                @error('password')
+                                <input type="password" class="form-control rounded-3 @error('jelszo') is-invalid @enderror" 
+                                       id="jelszo" name="jelszo" placeholder="Jelszó" required autocomplete="new-password">
+                                <label for="jelszo">Jelszó</label>
+                                @error('jelszo')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -81,6 +81,22 @@
                                     </div>
                                 @enderror
                             </div>
+
+                            <div class="form-floating mb-3">
+    <input type="text"
+           class="form-control rounded-3 @error('telefonszam') is-invalid @enderror"
+           id="telefonszam"
+           name="telefonszam"
+           placeholder="Telefonszám"
+           value="{{ old('telefonszam') }}"
+           required>
+    <label for="telefonszam">Telefonszám</label>
+
+    @error('telefonszam')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+
 
                             {{-- Gomb --}}
                             <div class="d-grid mb-4">
