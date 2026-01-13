@@ -14,12 +14,15 @@ class DolgozoSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('dolgozo')->insert([
+        $password = Hash::make('password');
+
+        DB::table('dolgozo')->insertOrIgnore([
             [
+
                 'nev' => 'Nagy Anna',
                 'email' => 'anna@example.com',
                 'telefon' => '06203334444',
-                'jelszo' => Hash::make('titkos'),
+                'jelszo' => $password,
                 'bio' => 'Kozmetikus 5 év tapasztalattal',
                 'kep' => 'anna.jpg'
             ],
@@ -27,7 +30,7 @@ class DolgozoSeeder extends Seeder
                 'nev' => 'Kiss Petra',
                 'email' => 'petra@example.com',
                 'telefon' => '06203335555',
-                'jelszo' => Hash::make('titkos'),
+                'jelszo' => $password,
                 'bio' => 'Férfi és női fodrász egyben!',
                 'kep' => 'petra.jpg'
             ],
@@ -35,7 +38,7 @@ class DolgozoSeeder extends Seeder
                 'nev' => 'Szabó Ádám',
                 'email' => 'adam@example.com',
                 'telefon' => '06203336666',
-                'jelszo' => Hash::make('titkos'),
+                'jelszo' => $password,
                 'bio' => 'Férfi fodrász, borbély szolgáltatásokkal',
                 'kep' => 'adam.jpg'
             ],
@@ -43,7 +46,7 @@ class DolgozoSeeder extends Seeder
                 'nev' => 'Szabó Éva', 
                 'email' => 'eva@freshszalon.hu', 
                 'telefon' => '06201112235', 
-                'jelszo' => Hash::make('titkos'), 
+                'jelszo' => $password, 
                 'bio' => 'Sminkes', 
                 'kep' => 'eva.jpg'
             ],
@@ -51,16 +54,34 @@ class DolgozoSeeder extends Seeder
                 'nev' => 'Varga Judit', 
                 'email' => 'judit@freshszalon.hu', 
                 'telefon' => '06201112236', 
-                'jelszo' => Hash::make('titkos'), 
+                'jelszo' => $password, 
                 'bio' => 'Körmös.', 
                 'kep' => 'judit.jpg'
             ],
-        ['nev' => 'Kiss Péter', 'email' => 'peter@freshszalon.hu', 'telefon' => '06201112237', 'jelszo' => Hash::make('titkos'), 'bio' => 'Gyógymasszőr.', 'kep' => 'peter.jpg'],
-        ['nev' => 'Tóth Zsuzsa', 'email' => 'zsuzsa@freshszalon.hu', 'telefon' => '06201112238', 'jelszo' => Hash::make('titkos'), 'bio' => 'Pedikűrös.', 'kep' => 'zsuzsa.jpg'],
-        ['nev' => 'Horváth Ádám', 'email' => 'adam@freshszalon.hu', 'telefon' => '06201112239', 'jelszo' => Hash::make('titkos'), 'bio' => 'Fodrász tanuló.', 'kep' => 'adam.jpg'],
-        ['nev' => 'Molnár Kinga', 'email' => 'kinga@freshszalon.hu', 'telefon' => '06201112240', 'jelszo' => Hash::make('titkos'), 'bio' => 'Sminkes.', 'kep' => 'kinga.jpg'],
-        ['nev' => 'Farkas Dóra', 'email' => 'dora@freshszalon.hu', 'telefon' => '06201112241', 'jelszo' => Hash::make('titkos'), 'bio' => 'Szempilla stylist.', 'kep' => 'dora.jpg'],
-        ['nev' => 'Balogh Tamás', 'email' => 'tamas@freshszalon.hu', 'telefon' => '06201112242', 'jelszo' => Hash::make('titkos'), 'bio' => 'Masszőr.', 'kep' => 'tamas.jpg'],
+            [
+                'nev' => 'Kiss Péter', 
+                'email' => 'peter@freshszalon.hu', 
+                'telefon' => '06201112237', 
+                'jelszo' => $password, 
+                'bio' => 'Gyógymasszőr.', 
+                'kep' => 'peter.jpg'
+            ],
+            [
+                'nev' => 'Tóth Zsuzsa', 
+                'email' => 'zsuzsa@freshszalon.hu', 
+                'telefon' => '06201112238', 
+                'jelszo' => $password, 
+                'bio' => 'Sminkes.', 
+                'kep' => 'zsuzsa.jpg'
+            ],
+            [
+                'nev' => 'Horváth Zoltán', 
+                'email' => 'zoltan@freshszalon.hu', 
+                'telefon' => '06201112239', 
+                'jelszo' => $password, 
+                'bio' => 'Kozmetikus.', 
+                'kep' => 'zoltan.jpg'
+            ],
         ]);
     }
 }

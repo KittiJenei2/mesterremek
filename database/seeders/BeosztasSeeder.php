@@ -13,19 +13,163 @@ class BeosztasSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('beosztasok')->insert([
-            'dolgozo_id' => 1,
-            'napok_id'   => 1,  // Hétfő
-            'ido_kezdes' => '09:00:00',
-            'ido_vege'   => '17:00:00',
-        ]);
+        DB::table('beosztasok')->insertOrIgnore([
+            [
+                'dolgozo_id' => 1,
+                'napok_id'   => 1,
+                'ido_kezdes' => '09:00:00',
+                'ido_vege'   => '17:00:00',
+            ],
+            [
+                'dolgozo_id' => 1,
+                'napok_id'   => 2,
+                'ido_kezdes' => '09:00:00',
+                'ido_vege'   => '17:00:00',
+            ],
+            [
+                'dolgozo_id' => 2,
+                'napok_id'   => 2,
+                'ido_kezdes' => '09:00:00',
+                'ido_vege'   => '17:30:00',
+            ],
+            [
+                'dolgozo_id' => 2,
+                'napok_id'   => 3,
+                'ido_kezdes' => '09:00:00',
+                'ido_vege'   => '17:30:00',
+            ],
+            [
+                'dolgozo_id' => 2,
+                'napok_id'   => 4,
+                'ido_kezdes' => '09:00:00',
+                'ido_vege'   => '17:30:00',
+            ],
+            [
+                'dolgozo_id' => 3,
+                'napok_id'   => 1,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '15:00:00',
+            ],
+            [
+                'dolgozo_id' => 3,
+                'napok_id'   => 3,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '15:00:00',
+            ],
+            [
+                'dolgozo_id' => 3,
+                'napok_id'   => 5,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '17:00:00',
+            ],
+            [
+                'dolgozo_id' => 4,
+                'napok_id'   => 2,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '15:00:00',
+            ],
+            [
+                'dolgozo_id' => 4,
+                'napok_id'   => 4,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '15:00:00',
+            ],
+            [
+                'dolgozo_id' => 4,
+                'napok_id'   => 6,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '15:00:00',
+            ],
 
-        // Dolgozó #1 kedden is dolgozik
-        DB::table('beosztasok')->insert([
-            'dolgozo_id' => 1,
-            'napok_id'   => 2,
-            'ido_kezdes' => '09:00:00',
-            'ido_vege'   => '17:00:00',
+            [
+                'dolgozo_id' => 5,
+                'napok_id'   => 1,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '14:00:00',
+            ],
+                        
+            [
+                'dolgozo_id' => 5,
+                'napok_id'   => 2,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '14:00:00',
+            ],
+                        
+            [
+                'dolgozo_id' => 5,
+                'napok_id'   => 3,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '14:00:00',
+            ],
+                        
+            [
+                'dolgozo_id' => 5,
+                'napok_id'   => 4,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '14:00:00',
+            ],
+            
+            [
+                'dolgozo_id' => 6,
+                'napok_id'   => 1,
+                'ido_kezdes' => '09:00:00',
+                'ido_vege'   => '18:00:00',
+            ],
+                        
+            [
+                'dolgozo_id' => 6,
+                'napok_id'   => 3,
+                'ido_kezdes' => '09:00:00',
+                'ido_vege'   => '18:00:00',
+            ],
+       
+            [
+                'dolgozo_id' => 6,
+                'napok_id'   => 5,
+                'ido_kezdes' => '09:00:00',
+                'ido_vege'   => '18:00:00',
+            ],
+                        
+            [
+                'dolgozo_id' => 7,
+                'napok_id'   => 1,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '16:00:00',
+            ],
+                                    
+            [
+                'dolgozo_id' => 7,
+                'napok_id'   => 3,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '16:00:00',
+            ],
+                                    
+            [
+                'dolgozo_id' => 8,
+                'napok_id'   => 1,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '18:00:00',
+            ],
+                        [
+                'dolgozo_id' => 8,
+                'napok_id'   => 2,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '18:00:00',
+            ],
+
+            [
+                'dolgozo_id' => 8,
+                'napok_id'   => 4,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '18:00:00',
+            ],
+
+            [
+                'dolgozo_id' => 8,
+                'napok_id'   => 5,
+                'ido_kezdes' => '10:00:00',
+                'ido_vege'   => '18:00:00',
+            ],
         ]);
     }
 }
