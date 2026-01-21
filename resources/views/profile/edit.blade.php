@@ -26,7 +26,7 @@
                 <div class="card-header bg-white p-4 border-bottom-0">
                     <div class="d-flex align-items-center gap-3">
                         <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
-                            <i class="fs-4">👤</i> {{-- Itt használhatsz FontAwesome ikont is --}}
+                            <i class="fs-4">👤</i> 
                         </div>
                         <div>
                             <h4 class="mb-0 fw-bold text-dark">Személyes adatok</h4>

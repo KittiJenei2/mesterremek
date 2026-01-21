@@ -51,4 +51,18 @@ Route::view('/kapcsolat', 'kapcsolat')->name('kapcsolat');
 
 Route::get('/szolgaltatasok-kategoria-alapjan', [IdopontfoglalasController::class, 'szolgaltatasokKategoriaAlapjan']);
 
+Route::middleware('guest:worker')->group(function () {
+    Route::get('/dolgozo/belepes', [App\Http\Controllers\WorkerController::class, 'showLogin'])->name('worker.login');
+    Route::post('/dolgozo/belepes', [App\Http\Controllers\WorkerController::class, 'login']);
+});
+
+// Csak bejelentkezett dolgozóknak (Dashboard + Funkciók)
+Route::middleware('auth:worker')->group(function () {
+    Route::get('/dolgozo/dashboard', [App\Http\Controllers\WorkerController::class, 'dashboard'])->name('worker.dashboard');
+    Route::post('/dolgozo/kijelentkezes', [App\Http\Controllers\WorkerController::class, 'logout'])->name('worker.logout');
+    
+    // Műveletek
+    Route::post('/dolgozo/foglalas/{id}/elfogadas', [App\Http\Controllers\WorkerController::class, 'updateStatus'])->name('worker.status.accept');
+    Route::post('/dolgozo/szabadsag', [App\Http\Controllers\WorkerController::class, 'storeVacation'])->name('worker.vacation.store');
+});
 

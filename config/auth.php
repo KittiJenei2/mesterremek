@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'worker' => [
+            'driver' => 'session',
+            'provider' => 'dolgozok',
+        ],
     ],
 
     /*
@@ -63,6 +68,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\Felhasznalo::class,
+        ],
+        'dolgozok' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Dolgozo::class,
         ],
 
         // 'users' => [
