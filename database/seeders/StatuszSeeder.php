@@ -16,7 +16,7 @@ class StatuszSeeder extends Seeder
         $statuszok = ['Függőben', 'Elfogadva', 'Elutasítva', 'Elvégezve'];
 
         foreach ($statuszok as $stat) {
-            DB::table('statuszok')->insert([
+            DB::table('statuszok')->insertOrIgnore([
                 'nev' => $stat
             ]);
         }
