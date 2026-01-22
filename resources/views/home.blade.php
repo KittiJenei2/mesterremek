@@ -70,53 +70,35 @@
 
 {{-- Ide jön majd a szolgáltatsáok+dolgozók rész --}}
 {{-- Munkatársak szekció --}}
-<section class="py-5 bg-light">
-    <div class="container">
-        
-        <div class="text-center mb-5">
-            <h5 class="text-primary text-uppercase fw-bold small">Szakértőink</h5>
-            <h2 class="fw-bold display-6">Ismerd meg munkatársainkat</h2>
-            <p class="text-muted w-75 mx-auto">
-                Csapatunk minden tagja elkötelezett a minőség és a stílus iránt. Válassz szakembert és foglalj időpontot egyszerűen!
-            </p>
-        </div>
-
-        <div class="row g-4">
-            @foreach ($dolgozok as $dolgozo)
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 border-0 shadow-sm dolgozo-card">
-                        
-                        {{-- Kép konténer - Itt állítjuk be a fix méretet --}}
-                        <div class="position-relative overflow-hidden" style="height: 350px;">
-                            <img src="{{ asset('images/dolgozok/' .$dolgozo->kep) }}" 
-                                 class="card-img-top w-100 h-100" 
-                                 alt="{{ $dolgozo->nev }}"
-                                 style="object-fit: cover; object-position: center top;">
-                        </div>
-
-                        <div class="card-body text-center p-4 d-flex flex-column">
-                            <h4 class="card-title fw-bold mb-1">{{ $dolgozo->nev }}</h4>
-                            
-                            {{-- Mivel nincs külön "titulus" mező, ideiglenesen fix szöveget vagy a bio elejét írjuk --}}
-                            <p class="text-primary small text-uppercase fw-bold mb-3">Szépségápolási szakértő</p>
-
-                            <p class="card-text text-muted mb-4">
-                                {{ Str::limit($dolgozo->bio, 80) }}
-                            </p>
-
-                            <div class="mt-auto">
-                                <a href="{{ route('idopontfoglalas.index') }}" class="btn btn-dark w-100 py-2 rounded-pill">
-                                    Időpontot foglalok
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div> 
-            @endforeach
-        </div>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-uppercase display-6">Ismerd meg csapatunkat!</h2>
+        <p class="text-muted">Profi szakembereink szeretettel várnak időpontodra!</p>
     </div>
-</section>
+
+    <div class="row g-4 justify-content-center">
+        @foreach ($dolgozok as $dolgozo)
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm text-center overflow-hidden">
+                    <div style="height: 300px; overflow: hidden;">
+                        <img src="{{ asset('images/dolgozok/' .$dolgozo->kep) }}" class="w-100 h-100 object-fit-cover" alt="{{ $dolgozo->nev }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dolgozo->nev) }}&size=300';">
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-1">{{ $dolgozo->nev }}</h5>
+                        <p class="mb-1">{{ $dolgozo->bio }}</p>
+                    </div>
+                </div>
+            </div> 
+        @endforeach
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{{ route('dolgozok.index') }}" class="btn btn-dark btn-lg rounded-pill px-5 fw-bold shadow hover-scale">
+            Összes kollégánk megtekintése
+        </a>
+    </div>
+</div>
+
 {{-- Rólunk szekció --}}
 <div class="container py-5 mt-5 border-top">
     <div class="row align-items-center">

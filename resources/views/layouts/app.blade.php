@@ -132,7 +132,9 @@
                 <li><a class="dropdown-item" href="{{ route('idopontfoglalas.index') }}">Időpontfoglalás</a></li>
                 
                 {{-- Megjegyzés: A Kapcsolat route-ot nem láttam a web.php-ban, így hagyom sima linken --}}
+                <li><a class="dropdown-item" href="{{ route('dolgozok.index') }}">Munkatársaink</a></li>
                 <li><a class="dropdown-item" href="/kapcsolat">Kapcsolat</a></li>
+
 
                 <li><hr class="dropdown-divider"></li>
 

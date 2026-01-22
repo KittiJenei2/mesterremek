@@ -52,6 +52,8 @@ Route::view('/kapcsolat', 'kapcsolat')->name('kapcsolat');
 
 Route::get('/szolgaltatasok-kategoria-alapjan', [IdopontfoglalasController::class, 'szolgaltatasokKategoriaAlapjan']);
 
+Route::get('/kollegaink', [HomeController::class, 'staff'])->name('dolgozok.index');
+
 Route::middleware('auth:worker')->group(function () {
     Route::get('/dolgozo/dashboard', [WorkerController::class, 'dashboard'])->name('worker.dashboard');
     Route::post('/dolgozo/kijelentkezes', [WorkerController::class, 'logout'])->name('worker.logout');

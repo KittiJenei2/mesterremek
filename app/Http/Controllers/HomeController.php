@@ -10,7 +10,15 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $dolgozok = Dolgozo::all();
+        $dolgozok = Dolgozo::inRandomOrder()->take(3)->get();
+
         return view('home', compact('dolgozok'));
+    }
+
+    public function staff()
+    {
+        $allDolgozo = Dolgozo::orderBy('nev')->get();
+
+        return view('dolgozok.index', compact('allDolgozo'));
     }
 }
