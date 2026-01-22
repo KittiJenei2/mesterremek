@@ -33,34 +33,38 @@ class AuthController extends Controller
         return view('auth.login');
     }
     public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'jelszo' => 'required'
-    ]);
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'jelszo' => 'required'
+        ]);
 
-    $user = Felhasznalo::where('email', $request->email)->first();
+        $user = Felhasznalo::where('email', $request->email)->first();
 
-    if (!$user || !Hash::check($request->jelszo, $user->jelszo)) {
-        return back()->withErrors(['email' => 'Hibás email vagy jelszó']);
+        if ($user && Hash::check($request->jelszo, $user->jelszo)) {
+            Auth::guard('web')->login($user); 
+            $request->session()->regenerate();
+            
+            return redirect()->route('idopontfoglalas.index');
+        }
+
+        if (Auth::guard('worker')->attempt(['email' => $request->email, 'password' => $request->jelszo])) {
+            $request->session()->regenerate();
+            
+            return redirect()->route('worker.dashboard');
+        }
+
+        return back()->withErrors(['email' => 'Hibás email cím vagy jelszó!']);
     }
 
-    Auth::login($user);
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        Auth::guard('worker')->logout();
 
-    $request->session()->regenerate();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-    return redirect()->route('idopontfoglalas.index');
-
-}
-
-public function logout(Request $request)
-{
-    Auth::logout();
-
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect('/')->with('succes', 'Sikeres kijelentkezés!');
-}
-
+        return redirect('/')->with('succes', 'Sikeres kijelentkezés!');
+    }
 }

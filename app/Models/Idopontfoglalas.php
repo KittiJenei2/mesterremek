@@ -25,6 +25,11 @@ class Idopontfoglalas extends Model
         return $this->belongsTo(Dolgozo::class, 'dolgozo_id');
     }
 
+    public function felhasznalo()
+    {
+        return $this->belongsTo(Felhasznalo::class, 'felhasznalo_id');
+    }
+
     public function szolgaltatas()
     {
         return $this->belongsTo(Szolgaltatas::class, 'szolgaltatasok_id');

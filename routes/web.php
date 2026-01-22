@@ -4,8 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IdopontfoglalasController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-    use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SzolgaltatasController;
+use App\Http\Controllers\WorkerController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/szolgaltatasok', [SzolgaltatasController::class, 'index'])->name('szolgaltatasok.index');
@@ -51,18 +52,10 @@ Route::view('/kapcsolat', 'kapcsolat')->name('kapcsolat');
 
 Route::get('/szolgaltatasok-kategoria-alapjan', [IdopontfoglalasController::class, 'szolgaltatasokKategoriaAlapjan']);
 
-Route::middleware('guest:worker')->group(function () {
-    Route::get('/dolgozo/belepes', [App\Http\Controllers\WorkerController::class, 'showLogin'])->name('worker.login');
-    Route::post('/dolgozo/belepes', [App\Http\Controllers\WorkerController::class, 'login']);
-});
-
-// Csak bejelentkezett dolgozóknak (Dashboard + Funkciók)
 Route::middleware('auth:worker')->group(function () {
-    Route::get('/dolgozo/dashboard', [App\Http\Controllers\WorkerController::class, 'dashboard'])->name('worker.dashboard');
-    Route::post('/dolgozo/kijelentkezes', [App\Http\Controllers\WorkerController::class, 'logout'])->name('worker.logout');
-    
-    // Műveletek
-    Route::post('/dolgozo/foglalas/{id}/elfogadas', [App\Http\Controllers\WorkerController::class, 'updateStatus'])->name('worker.status.accept');
-    Route::post('/dolgozo/szabadsag', [App\Http\Controllers\WorkerController::class, 'storeVacation'])->name('worker.vacation.store');
-});
+    Route::get('/dolgozo/dashboard', [WorkerController::class, 'dashboard'])->name('worker.dashboard');
+    Route::post('/dolgozo/kijelentkezes', [WorkerController::class, 'logout'])->name('worker.logout');
 
+    Route::post('/dolgozo/foglalas/{id}/elfogadas', [WorkerController::class, 'updateStatus'])->name('worker.status.accept');
+    Route::post('/dolgozo/szabadsag', [WorkerController::class, 'storeVacation'])->name('worker.vacation.store');
+});

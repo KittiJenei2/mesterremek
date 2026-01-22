@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Szabadsagok extends Model
 {
     protected $table = 'szabadsagok';
+    public $timestamps = false;
 
     protected $fillable = [
         'dolgozo_id',
