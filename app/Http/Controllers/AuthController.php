@@ -20,17 +20,40 @@ class AuthController extends Controller
         $request->validate([
             'nev' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:felhasznalo,email',
-            'telefonszam' => 'required|string|max:20', 
-            'jelszo' => 'required|string|min:8|same:password_confirmation',
+            'telefonszam' => [
+                'required',
+                'numeric',
+                'digits:11',
+                'regex:/^06\d{9}$/',
+                'unique:felhasznalo,telefonszam'
+            ],
+            'jelszo' => [
+                'required',
+                'string',
+                'min:8',
+                'same:password_confirmation',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/', 
+            ],
         ], [
-            // Opcionális: Egyedi hibaüzenetek (hogy magyarul írja ki)
             'nev.required' => 'A név megadása kötelező.',
+            'nev.string' => 'A névnek szövegnek kell lennie.',
+            'nev.max' => 'A név túl hosszú.',
+
             'email.required' => 'Az email cím megadása kötelező.',
+            'email.email' => 'Kérjük, érvényes email címet adjon meg.',
             'email.unique' => 'Ez az email cím már foglalt.',
+
             'telefonszam.required' => 'A telefonszám megadása kötelező.',
+            'telefonszam.numeric' => 'A telefonszám csak számjegyeket tartalmazhat.',
+            'telefonszam.digits' => 'A telefonszámnak pontosan 11 számjegyűnek kell lennie.',
+            'telefonszam.regex' => 'A telefonszám formátuma hibás. Helyes formátum: 06301234567',
+            'telefonszam.unique' => 'Ez a telefonszám már regisztrálva van.',
+
             'jelszo.required' => 'A jelszó megadása kötelező.',
+            'jelszo.string' => 'A jelszónak szövegesnek kell lennie.',
             'jelszo.min' => 'A jelszónak legalább 8 karakter hosszúnak kell lennie.',
-            'jelszo.same' => 'A két jelszó nem egyezik.',
+            'jelszo.same' => 'A megadott jelszavak nem egyeznek.',
+            'jelszo.regex' => 'A jelszónak tartalmaznia kell kisbetűt, nagybetűt és számot!', // <--- ÚJ ÜZENET
         ]);
 
         $user = Felhasznalo::create([

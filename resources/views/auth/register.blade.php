@@ -36,7 +36,7 @@
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control rounded-3 @error('nev') is-invalid @enderror" 
                                        id="nev" name="nev" placeholder="Teljes név" 
-                                       value="{{ old('name') }}" required autofocus autocomplete="name">
+                                       value="{{ old('nev') }}" required autofocus autocomplete="name">
                                 <label for="nev">Teljes név</label>
                                 @error('nev')
                                     <div class="invalid-feedback">
@@ -52,6 +52,19 @@
                                        value="{{ old('email') }}" required autocomplete="username">
                                 <label for="email">Email cím</label>
                                 @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            {{-- Telefonszám --}}
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control rounded-3 @error('telefonszam') is-invalid @enderror" 
+                                       id="telefonszam" name="telefonszam" placeholder="06301234567" 
+                                       value="{{ old('telefonszam') }}" required>
+                                <label for="telefonszam">Telefonszám (pl. 06301234567)</label>
+                                @error('telefonszam')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -81,23 +94,6 @@
                                     </div>
                                 @enderror
                             </div>
-
-                            {{-- E-mail cím --}}
-                            <div class="form-floating mb-3">
-                                <input type="text"
-                                       class="form-control rounded-3 @error('telefonszam') is-invalid @enderror"
-                                       id="telefonszam"
-                                       name="telefonszam"
-                                       placeholder="Telefonszám"
-                                       value="{{ old('telefonszam') }}"
-                                       required>
-                                <label for="telefonszam">Telefonszám</label>
-
-                                @error('telefonszam')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
 
                             {{-- Gomb --}}
                             <div class="d-grid mb-4">
