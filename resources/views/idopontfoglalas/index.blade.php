@@ -43,16 +43,16 @@
 
                         {{-- 2. Szolgáltatás kiválasztása --}}
                         <div class="mb-4 d-none" id="step_szolgaltatas">
-                                <label for="szolgaltatas_id" class="form-label fw-bold text-uppercase text-muted                        small">2. Válassz szolgáltatást</label>
-                                <div class="position-relative">
-                                    <select class="form-select form-select-lg shadow-sm border-0 bg-light"                      id="szolgaltatas_id" name="szolgaltatas_id" required disabled>
-                                        <option value="" selected disabled>-- Válassz előbb kategóriát --</option>
-                                    </select>
+                            <label for="szolgaltatas_id" class="form-label fw-bold text-uppercase text-muted small">2. Válassz szolgáltatást</label>
+                            <div class="position-relative">
+                                <select class="form-select form-select-lg shadow-sm border-0 bg-light" id="szolgaltatas_id" name="szolgaltatas_id" required disabled>
+                                    <option value="" selected disabled>-- Válassz előbb kategóriát --</option>
+                                </select>
 
-                                    <div id="szolgaltatasLoader" class="position-absolute top-50 end-0                         translate-middle-y me-3 d-none">
-                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></                     div>
-                                    </div>
+                                <div id="szolgaltatasLoader" class="position-absolute top-50 end-0 translate-middle-y me-3 d-none">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
                                 </div>
+                            </div>
                         </div>
 
                         {{-- 3. Dolgozó kiválasztása --}}
@@ -113,7 +113,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // Elemek kiválasztása
-    const kategoriaSelect = document.getElementById('lehetoseg_id'); // ÚJ
+    const kategoriaSelect = document.getElementById('lehetoseg_id');
     const szolgaltatasSelect = document.getElementById('szolgaltatas_id');
     const dolgozoSelect = document.getElementById('dolgozo_id');
     const datumInput = document.getElementById('datum');
@@ -123,31 +123,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const alertBox = document.getElementById('alertMessage');
 
     // Szakaszok
-    const stepSzolgaltatas = document.getElementById('step_szolgaltatas'); // ÚJ
+    const stepSzolgaltatas = document.getElementById('step_szolgaltatas');
     const stepDolgozo = document.getElementById('step_dolgozo');
     const stepDatum = document.getElementById('step_datum');
     const stepIdo = document.getElementById('step_ido');
     
     // Loaderek
-    const szolgaltatasLoader = document.getElementById('szolgaltatasLoader'); // ÚJ
+    const szolgaltatasLoader = document.getElementById('szolgaltatasLoader');
     const dolgozoLoader = document.getElementById('dolgozoLoader');
 
     let fp = null; // Flatpickr instance
 
-    // --- 1. KATEGÓRIA VÁLTÁSAKOR -> SZOLGÁLTATÁSOK LEKÉRÉSE ---
+    // --- 0. URL PARAMÉTEREK ELLENŐRZÉSE (Automatikus kitöltés) ---
+    // Ez a rész figyeli, hogy jöttünk-e a "Szolgáltatások" oldalról
+    const urlParams = new URLSearchParams(window.location.search);
+    const preCatId = urlParams.get('category_id');
+    const preSvcId = urlParams.get('service_id');
+
+    if (preCatId) {
+        // Ha van kategória az URL-ben, beállítjuk és betöltjük a szolgáltatásokat
+        kategoriaSelect.value = preCatId;
+        loadSzolgaltatasok(preCatId, preSvcId);
+    }
+
+    // --- 1. KATEGÓRIA VÁLTÁSAKOR ---
     kategoriaSelect.addEventListener('change', function() {
-        const kategoriaId = this.value;
+        loadSzolgaltatasok(this.value);
+    });
+
+    // --- ÚJ FÜGGVÉNY: Szolgáltatások betöltése (paraméterezhető) ---
+    function loadSzolgaltatasok(kategoriaId, autoSelectServiceId = null) {
         if(!kategoriaId) return;
 
         // Reset
-        resetSzolgaltatas();
+        resetSzolgaltatas(); 
         resetDolgozo();
         resetDatum();
         resetIdo();
 
         // UI megjelenítés
         stepSzolgaltatas.classList.remove('d-none');
-        szolgaltatasLoader.classList.remove('d-none'); // Loader bekapcs
+        szolgaltatasLoader.classList.remove('d-none');
         szolgaltatasSelect.disabled = true;
 
         fetch(`/szolgaltatasok-kategoria-alapjan?lehetoseg_id=${kategoriaId}`)
@@ -164,22 +180,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 data.forEach(szolg => {
                     const ar = new Intl.NumberFormat('hu-HU').format(szolg.ar);
+                    // Megnézzük, hogy ezt kell-e automatikusan kiválasztani
+                    const isSelected = (autoSelectServiceId && parseInt(autoSelectServiceId) === szolg.id) ? 'selected' : '';
+                    
                     szolgaltatasSelect.innerHTML += `
-                        <option value="${szolg.id}" data-duration="${szolg.idotartam}">
+                        <option value="${szolg.id}" data-duration="${szolg.idotartam}" ${isSelected}>
                             ${szolg.nev} (${szolg.idotartam} perc) - ${ar} Ft
                         </option>`;
                 });
+
                 szolgaltatasSelect.disabled = false;
+
+                // Ha volt automatikus kiválasztás, akkor indítsuk el a következő lépést (Dolgozók)
+                if (autoSelectServiceId) {
+                    handleSzolgaltatasChange();
+                }
             })
             .catch(error => {
                 console.error('Hiba:', error);
                 alert("Hiba történt a szolgáltatások betöltésekor! Részletek a konzolban (F12).");
             })
             .finally(() => {
-                // Ez mindenképpen lefut, akár sikerült, akár nem -> Eltüntetjük a loadert
                 szolgaltatasLoader.classList.add('d-none');
             });
-    });
+    }
 
     // --- 2. SZOLGÁLTATÁS VÁLTÁSAKOR -> DOLGOZÓK LEKÉRÉSE ---
     szolgaltatasSelect.addEventListener('change', handleSzolgaltatasChange);
@@ -188,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const serviceId = szolgaltatasSelect.value;
         if(!serviceId) return;
 
-        // Resetelünk mindent, ami ezután jön
+        // Reset
         resetDolgozo();
         resetDatum();
         resetIdo();
@@ -297,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function resetSzolgaltatas() {
         szolgaltatasSelect.innerHTML = '<option value="" selected disabled>Betöltés...</option>';
         szolgaltatasSelect.disabled = true;
-        stepSzolgaltatas.classList.add('d-none');
+        // stepSzolgaltatas.classList.add('d-none'); // Kivettem, hogy látszódjon a loader
     }
     function resetDolgozo() {
         dolgozoSelect.innerHTML = '<option value="" selected disabled>-- Válassz előbb szolgáltatást --</option>';
@@ -318,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.innerText = 'Foglalás véglegesítése';
     }
 
-    // --- FORM BEKÜLDÉSE (VÁLTOZATLAN) ---
+    // --- FORM BEKÜLDÉSE ---
     const form = document.getElementById('bookingForm');
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -348,9 +372,10 @@ document.addEventListener('DOMContentLoaded', function() {
             alertBox.innerHTML = `<strong>Siker!</strong> ${data.uzenet}`;
             alertBox.classList.remove('d-none');
             form.reset();
-            // Mivel reseteltük a formot, manuálisan vissza kell állítani a mezőket alaphelyzetbe
+            
+            // UI Reset
             kategoriaSelect.value = "";
-            resetSzolgaltatas();
+            stepSzolgaltatas.classList.add('d-none'); 
             resetDolgozo();
             resetDatum();
             resetIdo();

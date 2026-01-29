@@ -59,8 +59,10 @@
                                     
                                     {{-- Gomb: átvisz az időpontfoglaláshoz és kiválasztja a szolgáltatást --}}
                                     {{-- Megjegyzés: A 'selected_service' paramétert később lekezelhetjük a foglalás oldalon --}}
-                                    <a href="{{ route('idopontfoglalas.index', ['service_id' => $szolgaltatas->id]) }}" 
-                                       class="btn btn-outline-dark rounded-pill px-4">
+                                    <a href="{{ route('idopontfoglalas.index', [
+                                        'category_id' => $szolgaltatas->lehetosegek_id, 
+                                        'service_id' => $szolgaltatas->id
+                                        ]) }}" class="btn btn-outline-dark rounded-pill px-4">
                                         Foglalás
                                     </a>
                                 </div>
