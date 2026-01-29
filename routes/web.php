@@ -40,6 +40,7 @@ Route::delete('/profil/foglalas/{id}', [ProfileController::class, 'cancel'])
     ->name('profile.cancel');
     Route::get('/profil/edit', [ProfileController::class, 'edit'])->middleware('auth')->name('profile.edit');
 Route::post('/profil/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
+Route::put('/profil/foglalas/{id}/modositas', [ProfileController::class, 'updateTime'])->middleware('auth')->name('profile.appointmen.update');
 Route::put('/profil/jelszo', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
 Route::get('/foglalhato-napok', [IdopontfoglalasController::class, 'foglalhatoNapok']);

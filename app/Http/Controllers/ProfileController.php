@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Idopontfoglalas;
+use App\Models\Velemeny;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
-use App\Models\Velemeny;
 
 class ProfileController extends Controller
 {
@@ -156,5 +157,58 @@ public function index()
         $user->save();
 
         return back()->with('success', 'A jelszó sikeresen módosítva!');
+    }
+
+    // Időpont módosítása (csak óra, ugyanazon a napon)
+    public function updateTime(Request $request, $id)
+    {
+        $request->validate([
+            'ido_kezdes' => 'required|date_format:H:i',
+        ]);
+
+        // Megkeressük a foglalást
+        $foglalas = Idopontfoglalas::where('id', $id)
+            ->where('felhasznalo_id', Auth::id())
+            ->firstOrFail();
+
+        // 1. ELLENŐRZÉS: 2 órás szabály
+        // A foglalás teljes dátuma és ideje
+        $eredetiKezdes = Carbon::parse($foglalas->datum . ' ' . $foglalas->ido_kezdes);
+        
+        // Ha a mostani időhöz hozzáadunk 2 órát, és az már későbbi, mint a foglalás kezdete, akkor letiltjuk.
+        if (now()->addHours(2)->gt($eredetiKezdes)) {
+            return back()->with('error', 'A foglalás módosítása csak a kezdés előtt legkésőbb 2 órával lehetséges!');
+        }
+
+        // 2. ÜTKÖZÉSVIZSGÁLAT
+        // Kiszámoljuk az új befejezési időt
+        $idotartam = $foglalas->szolgaltatas->idotartam;
+        $ujKezdes = Carbon::parse($foglalas->datum . ' ' . $request->ido_kezdes);
+        $ujVege = $ujKezdes->copy()->addMinutes($idotartam);
+        
+        $ujKezdesStr = $ujKezdes->format('H:i');
+        $ujVegeStr = $ujVege->format('H:i');
+
+        // Megnézzük, van-e MÁSIK foglalás, ami ütközne az új időponttal
+        // (A saját magunkkal való ütközést kizárjuk: where('id', '!=', $id))
+        $utkozes = Idopontfoglalas::where('dolgozo_id', $foglalas->dolgozo_id)
+            ->where('datum', $foglalas->datum)
+            ->where('id', '!=', $id) 
+            ->where(function ($query) use ($ujKezdesStr, $ujVegeStr) {
+                $query->where('ido_kezdes', '<', $ujVegeStr)
+                      ->where('ido_vege', '>', $ujKezdesStr);
+            })
+            ->exists();
+
+        if ($utkozes) {
+            return back()->with('error', 'A kiválasztott időpont sajnos már foglalt.');
+        }
+
+        // 3. MENTÉS
+        $foglalas->ido_kezdes = $ujKezdesStr;
+        $foglalas->ido_vege = $ujVegeStr;
+        $foglalas->save();
+
+        return back()->with('success', 'Az időpontot sikeresen módosítottuk!');
     }
 }
