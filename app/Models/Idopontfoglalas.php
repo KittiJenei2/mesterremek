@@ -39,4 +39,9 @@ class Idopontfoglalas extends Model
     {
         return $this->belongsTo(\App\Models\Statusz::class, 'statuszok_id');
     }
+
+    public function velemeny()
+    {
+        return $this->hasOne(Velemeny::class, 'idopont_id');
+    }
 }

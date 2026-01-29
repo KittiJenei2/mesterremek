@@ -33,6 +33,7 @@ Route::post('/idopontfoglalas/store', [IdopontfoglalasController::class, 'store'
 
 Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profil/velemeny', [ProfileController::class, 'storeFeedback'])->name('profile.feedback.store');
 });
 Route::delete('/profil/foglalas/{id}', [ProfileController::class, 'cancel'])
     ->middleware('auth')

@@ -8,31 +8,53 @@ use App\Models\Idopontfoglalas;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
+use App\Models\Velemeny;
 
 class ProfileController extends Controller
 {
-    public function index()
+public function index()
     {
         $felhasznalo = Auth::user();
-        $most = now(); 
 
-        Idopontfoglalas::where('felhasznalo_id', $felhasznalo->id)
-            ->where('statuszok_id', '!=', 4) 
-            ->where(function ($query) use ($most) {
-                $query->where('datum', '<', $most->format('Y-m-d'))
-                      ->orWhere(function ($q) use ($most) {
-                          $q->where('datum', $most->format('Y-m-d'))
-                            ->where('ido_kezdes', '<', $most->format('H:i:s'));
-                      });
-            })
-            ->update(['statuszok_id' => 4]); 
-
-        $foglalasok = Idopontfoglalas::where('felhasznalo_id', $felhasznalo->id)
-            ->with(['dolgozo', 'szolgaltatas']) 
-            ->orderBy('datum', 'asc') 
+        $aktualis_foglalasok = Idopontfoglalas::where('felhasznalo_id', $felhasznalo->id)
+            ->where('datum', '>=', now()->format('Y-m-d'))
+            ->with(['szolgaltatas', 'dolgozo', 'statusz']) // Eager loading a teljesítményért
+            ->orderBy('datum')
             ->get();
 
-        return view('profile.index', compact('felhasznalo', 'foglalasok'));
+        $korabbi_foglalasok = Idopontfoglalas::where('felhasznalo_id', $felhasznalo->id)
+            ->where('datum', '<', now()->format('Y-m-d'))
+            ->with(['szolgaltatas', 'dolgozo', 'statusz', 'velemeny']) 
+            ->orderBy('datum', 'desc')
+            ->get();
+
+        return view('profile.index', compact('felhasznalo', 'aktualis_foglalasok', 'korabbi_foglalasok'));
+    }
+
+    public function storeFeedback(Request $request)
+    {
+        $request->validate([
+            'idopont_id' => 'required|exists:idopontfoglalas,id',
+            'ertekeles' => 'required|integer|min:1|max:5',
+            'velemeny' => 'nullable|string|max:500',
+        ]);
+
+        $foglalas = Idopontfoglalas::where('id', $request->idopont_id)
+            ->where('felhasznalo_id', Auth::id())
+            ->firstOrFail();
+
+        if(Velemeny::where('idopont_id', $foglalas->id)->exists()) {
+            return back()->with('error', 'Ehhez az időponthoz már küldtél visszajelzést.');
+        }
+
+        Velemeny::create([
+            'felhasznalo_id' => Auth::id(),
+            'idopont_id' => $foglalas->id,
+            'ertekeles' => $request->ertekeles,
+            'velemeny' => $request->velemeny
+        ]);
+
+        return back()->with('success', 'Köszönjük a visszajelzésedet!');
     }
 
     public function cancel($id)
