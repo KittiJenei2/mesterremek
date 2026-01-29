@@ -17,15 +17,33 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-         Felhasznalo::create([
+        $request->validate([
+            'nev' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:felhasznalo,email',
+            'telefonszam' => 'required|string|max:20', 
+            'jelszo' => 'required|string|min:8|same:password_confirmation',
+        ], [
+            // Opcionális: Egyedi hibaüzenetek (hogy magyarul írja ki)
+            'nev.required' => 'A név megadása kötelező.',
+            'email.required' => 'Az email cím megadása kötelező.',
+            'email.unique' => 'Ez az email cím már foglalt.',
+            'telefonszam.required' => 'A telefonszám megadása kötelező.',
+            'jelszo.required' => 'A jelszó megadása kötelező.',
+            'jelszo.min' => 'A jelszónak legalább 8 karakter hosszúnak kell lennie.',
+            'jelszo.same' => 'A két jelszó nem egyezik.',
+        ]);
+
+        $user = Felhasznalo::create([
             'nev' => $request->nev,
             'email' => $request->email,
-            'telefonszam' => $request->telefonszam,
+            'telefonszam' => $request->telefonszam, 
             'jelszo' => Hash::make($request->jelszo),
             'keszitve' => now(),
         ]);
 
-        return redirect('/login');
+        Auth::guard('web')->login($user);
+
+        return redirect()->route('idopontfoglalas.index')->with('success', 'Sikeres regisztráció!');
     }
 
     public function showLogin()
