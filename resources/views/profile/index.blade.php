@@ -51,8 +51,9 @@
                     <td>{{ $f->szolgaltatas->nev }}</td>
                     <td>{{ $f->dolgozo->nev }}</td>
                     <td>
-                        <span class="badge bg-info text-dark">
-                            {{ $f->statusz->nev }}
+                        {{-- JAVÍTVA: $foglalas helyett $f --}}
+                        <span class="badge {{ $f->statuszok_id == 4 ? 'bg-success' : 'bg-warning' }}">
+                            {{ $f->statusz->nev ?? 'Ismeretlen' }}
                         </span>
                     </td>
 

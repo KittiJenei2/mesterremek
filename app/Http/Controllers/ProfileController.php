@@ -14,10 +14,22 @@ class ProfileController extends Controller
     public function index()
     {
         $felhasznalo = Auth::user();
+        $most = now(); 
+
+        Idopontfoglalas::where('felhasznalo_id', $felhasznalo->id)
+            ->where('statuszok_id', '!=', 4) 
+            ->where(function ($query) use ($most) {
+                $query->where('datum', '<', $most->format('Y-m-d'))
+                      ->orWhere(function ($q) use ($most) {
+                          $q->where('datum', $most->format('Y-m-d'))
+                            ->where('ido_kezdes', '<', $most->format('H:i:s'));
+                      });
+            })
+            ->update(['statuszok_id' => 4]); 
 
         $foglalasok = Idopontfoglalas::where('felhasznalo_id', $felhasznalo->id)
-            ->with('dolgozo', 'szolgaltatas')
-            ->orderBy('datum', 'asc')
+            ->with(['dolgozo', 'szolgaltatas']) 
+            ->orderBy('datum', 'asc') 
             ->get();
 
         return view('profile.index', compact('felhasznalo', 'foglalasok'));
