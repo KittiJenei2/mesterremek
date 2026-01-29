@@ -12,7 +12,8 @@
     <div class="row g-5">
         @foreach($allDolgozo as $dolgozo)
             <div class="col-lg-6">
-                <div class="card border-0 shadow-lg overflow-hidden rounded-4 h-100">
+                {{-- Hozzáadtuk a 'dolgozo-card' osztályt --}}
+                <div class="card border-0 shadow-lg overflow-hidden rounded-4 h-100 dolgozo-card">
                     <div class="row g-0 h-100">
                         
                         {{-- Bal oldal: Kép --}}
@@ -29,14 +30,12 @@
                             <div class="card-body p-4 d-flex flex-column h-100 justify-content-center">
                                 <h3 class="fw-bold mb-2">{{ $dolgozo->nev }}</h3>
                                 
-                                {{-- Elérhetőség (opcionális) --}}
                                 <p class="text-primary mb-3 fw-bold small">
                                     <i class="bi bi-envelope-fill me-2"></i>{{ $dolgozo->email }}
                                 </p>
 
                                 <hr class="opacity-25 my-2">
 
-                                {{-- BIO (Bemutatkozás) --}}
                                 <p class="text-muted fst-italic mb-0">
                                     {{ $dolgozo->bio ?? 'Sok szeretettel várom régi és új vendégeimet!' }}
                                 </p>

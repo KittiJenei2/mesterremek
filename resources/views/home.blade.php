@@ -79,7 +79,8 @@
     <div class="row g-4 justify-content-center">
         @foreach ($dolgozok as $dolgozo)
             <div class="col-md-4 col-sm-6">
-                <div class="card h-100 border-0 shadow-sm text-center overflow-hidden">
+                {{-- Hozzáadtuk a 'dolgozo-card' osztályt --}}
+                <div class="card h-100 border-0 shadow-sm text-center overflow-hidden dolgozo-card">
                     <div style="height: 300px; overflow: hidden;">
                         <img src="{{ asset('images/dolgozok/' .$dolgozo->kep) }}" class="w-100 h-100 object-fit-cover" alt="{{ $dolgozo->nev }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dolgozo->nev) }}&size=300';">
                     </div>

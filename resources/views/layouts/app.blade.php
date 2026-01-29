@@ -39,8 +39,9 @@
     }
 
     .dolgozo-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.15) !important;
+        z-index: 10;
     }
     .hero-slide {
         height: 85vh;
