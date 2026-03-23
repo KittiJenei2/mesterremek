@@ -162,6 +162,10 @@ class IdopontfoglalasController extends Controller
 
     public function store(Request $request)
 {
+    // Biztonsági ellenőrzés: Ha be van jelentkezve, de nincs joga foglalni
+    if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->foglalhat == 0) {
+        return response()->json(['uzenet' => 'Fiókodhoz az időpontfoglalás le lett tiltva!'], 403);
+    }
     $request->validate([
         'szolgaltatas_id' => 'required|integer',
         'dolgozo_id' => 'required|integer',

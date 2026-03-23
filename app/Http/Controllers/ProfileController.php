@@ -34,6 +34,11 @@ public function index()
 
     public function storeFeedback(Request $request)
     {
+        // --- JOGOSULTSÁG ELLENŐRZÉSE: Véleményírás ---
+        if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->velemenyt_irhat == 0) {
+            return back()->with('error', 'Fiókodhoz a véleményírás le lett tiltva az adminisztrátor által!');
+        }
+        // ---------------------------------------------
         $request->validate([
             'idopont_id' => 'required|exists:idopontfoglalas,id',
             'ertekeles' => 'required|integer|min:1|max:5',

@@ -45,6 +45,21 @@
                         </li>
                     </ul>
 
+                    {{-- ÚJ RÉSZ: Jogosultságok megjelenítése --}}
+                    <div class="mb-4 p-3 bg-light rounded-3 text-start">
+                        <h6 class="fw-bold text-uppercase text-muted small mb-2">Jogosultságaim</h6>
+                        <div class="mb-1">
+                            <span class="badge {{ $felhasznalo->foglalhat ? 'bg-success' : 'bg-danger' }} p-2 w-100">
+                                Időpontfoglalás: {{ $felhasznalo->foglalhat ? 'Engedélyezve' : 'Tiltva' }}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="badge {{ $felhasznalo->velemenyt_irhat ? 'bg-success' : 'bg-danger' }} p-2 w-100">
+                                Véleményírás: {{ $felhasznalo->velemenyt_irhat ? 'Engedélyezve' : 'Tiltva' }}
+                            </span>
+                        </div>
+                    </div>
+
                     <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary rounded-pill w-100 fw-bold">
                         Adataim módosítása
                     </a>
@@ -52,7 +67,7 @@
             </div>
         </div>
 
-        {{-- 2. FOGLALÁSOK --}}
+        {{-- 2. FOGLALÁSOK RÉSZ --}}
         <div class="col-lg-8">
             
             {{-- A) AKTUÁLIS --}}
@@ -155,13 +170,18 @@
                                                         @for($i = $f->velemeny->ertekeles; $i < 5; $i++) ☆ @endfor
                                                     </div>
                                                 @else
-                                                    <button class="btn btn-outline-primary btn-sm rounded-pill feedbackBtn px-3"
-                                                            data-bs-toggle="modal" 
-                                                            data-bs-target="#feedbackModal"
-                                                            data-id="{{ $f->id }}"
-                                                            data-szolgaltatas="{{ $f->szolgaltatas->nev }}">
-                                                        Értékelés
-                                                    </button>
+                                                    {{-- JOGOSULTSÁG ELLENŐRZÉSE --}}
+                                                    @if($felhasznalo->velemenyt_irhat == 1)
+                                                        <button class="btn btn-outline-primary btn-sm rounded-pill feedbackBtn px-3"
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#feedbackModal"
+                                                                data-id="{{ $f->id }}"
+                                                                data-szolgaltatas="{{ $f->szolgaltatas->nev }}">
+                                                            Értékelés
+                                                        </button>
+                                                    @else
+                                                        <span class="badge bg-secondary py-2" title="A véleményírást az adminisztrátor letiltotta.">Véleményírás tiltva</span>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
