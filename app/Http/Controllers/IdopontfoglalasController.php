@@ -196,15 +196,19 @@ class IdopontfoglalasController extends Controller
     ]);
 
     // --- EMAIL KÜLDÉS ---
-    Mail::to(Auth::user()->email)->send(
-        new FoglalasLetrehozva([
-            'nev' => Auth::user()->nev,
-            'szolgaltatas' => $szolgaltatas->nev,
-            'dolgozo' => $dolgozo->nev,
-            'datum' => $request->datum,
-            'ido' => $request->ido_kezdes
-        ])
-    );
+    try {
+        Mail::to(Auth::user()->email)->send(
+            new FoglalasLetrehozva([
+                'nev' => Auth::user()->nev,
+                'szolgaltatas' => $szolgaltatas->nev,
+                'dolgozo' => $dolgozo->nev,
+                'datum' => $request->datum,
+                'ido' => $request->ido_kezdes
+            ])
+        );
+    } catch (\Exception $e) {
+        \Illuminate\Support\Facades\Log::error('Email hiba: ' . $e->getMessage());
+    }
 
     return response()->json([
         'uzenet' => 'Foglalás sikeresen mentve!'
