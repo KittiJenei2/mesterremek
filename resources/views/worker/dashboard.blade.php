@@ -122,5 +122,68 @@
             </div>
         </div>
     </div>
+
+    {{-- ÚJ: NAPTÁR NÉZET SZEKCIÓ (Teljes szélességben a táblázatok alatt) --}}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-4 p-4 mb-5 bg-white">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                    <h4 class="fw-bold m-0">🗓 Beosztás Naptár</h4>
+                    <div>
+                        <span class="badge bg-warning text-dark me-2">Függőben</span>
+                        <span class="badge bg-success me-2">Elfogadva</span>
+                        <span class="badge bg-primary me-2">Elvégezve</span>
+                        <span class="badge bg-danger">Szabadság</span>
+                    </div>
+                </div>
+                
+                {{-- Ide rajzolja ki a JS a naptárat --}}
+                <div id="calendar" style="min-height: 600px;"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
+@endsection
+
+{{-- NAPTÁR JAVASCRIPT KÓDJA --}}
+@section('scripts')
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        
+        // A WorkerControllerből kapott JSON adat (ha létezik, különben üres tömb)
+        var calendarEvents = @json($calendarEvents ?? []);
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek', // Heti beosztás
+            locale: 'hu',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            buttonText: {
+                today: 'Ma',
+                month: 'Hónap',
+                week: 'Hét',
+                day: 'Nap'
+            },
+            firstDay: 1, // Hétfő
+            slotMinTime: '08:00:00', // Szalon nyitás
+            slotMaxTime: '20:00:00', // Szalon zárás
+            allDaySlot: true,
+            allDayText: 'Egész nap',
+            events: calendarEvents,
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                meridiem: false
+            }
+        });
+        
+        calendar.render();
+    });
+</script>
 @endsection
