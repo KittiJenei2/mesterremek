@@ -15,6 +15,53 @@
 
 <div class="container">
 
+    {{-- KERESÉS ÉS SZŰRÉS SZEKCIÓ --}}
+    <div class="card border-0 shadow-sm rounded-4 mb-5 bg-light">
+        <div class="card-body p-4">
+            <form action="{{ route('szolgaltatasok.index') }}" method="GET" class="row g-3 align-items-end">
+                
+                {{-- Szöveges kereső --}}
+                <div class="col-md-5">
+                    <label for="kereses" class="form-label fw-bold text-muted small text-uppercase">Keresés név alapján</label>
+                    <div class="input-group input-group-lg shadow-sm">
+                        <span class="input-group-text bg-white border-0"><i class="text-primary">🔍</i></span>
+                        <input type="text" name="kereses" id="kereses" class="form-control border-0" 
+                               placeholder="Pl. Hajfestés, Gél lakk..." 
+                               value="{{ request('kereses') }}">
+                    </div>
+                </div>
+
+                {{-- Kategória szűrő --}}
+                <div class="col-md-4">
+                    <label for="kategoria" class="form-label fw-bold text-muted small text-uppercase">Kategória</label>
+                    <select name="kategoria" id="kategoria" class="form-select form-select-lg border-0 shadow-sm">
+                        <option value="">-- Minden kategória --</option>
+                        @foreach($kategoriak as $kat)
+                            <option value="{{ $kat->id }}" {{ request('kategoria') == $kat->id ? 'selected' : '' }}>
+                                {{ $kat->nev }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Gombok --}}
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill shadow-sm">Szűrés</button>
+                    
+                    {{-- Törlés gomb (csak akkor jelenik meg, ha van aktív szűrés) --}}
+                    @if(request()->filled('kereses') || request()->filled('kategoria'))
+                        <a href="{{ route('szolgaltatasok.index') }}" class="btn btn-outline-danger btn-lg rounded-pill px-3" title="Szűrők törlése">
+                            ✖
+                        </a>
+                    @endif
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    {{-- KERESÉS VÉGE --}}
+
+
     {{-- 2. Szolgáltatások listázása Kategóriák szerint --}}
     {{-- A controllerben lekért $szolgaltatasok változót itt csoportosítjuk a kategória neve alapján --}}
     @php
@@ -58,7 +105,6 @@
                                     </div>
                                     
                                     {{-- Gomb: átvisz az időpontfoglaláshoz és kiválasztja a szolgáltatást --}}
-                                    {{-- Megjegyzés: A 'selected_service' paramétert később lekezelhetjük a foglalás oldalon --}}
                                     <a href="{{ route('idopontfoglalas.index', [
                                         'category_id' => $szolgaltatas->lehetosegek_id, 
                                         'service_id' => $szolgaltatas->id
@@ -75,9 +121,16 @@
         </div>
     @endforeach
 
+    {{-- Ha a szűrés eredménye üres --}}
     @if($szolgaltatasok->isEmpty())
-        <div class="text-center py-5">
-            <h3 class="text-muted">Jelenleg nincsenek elérhető szolgáltatások.</h3>
+        <div class="alert alert-warning text-center p-5 rounded-4 shadow-sm mb-5">
+            <h4 class="fw-bold mb-3">Sajnos nincs találat! 😔</h4>
+            <p class="mb-0 fs-5">A megadott feltételekkel nem találtunk szolgáltatást.</p>
+            @if(request()->filled('kereses') || request()->filled('kategoria'))
+                <a href="{{ route('szolgaltatasok.index') }}" class="btn btn-outline-dark rounded-pill px-4 mt-4">
+                    Keresés törlése és összes mutatása
+                </a>
+            @endif
         </div>
     @endif
 
