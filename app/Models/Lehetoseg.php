@@ -9,6 +9,7 @@ class Lehetoseg extends Model
 {
     use HasFactory;
     protected $table = 'lehetosegek';
+    public $timestamps = false;
 
     protected $fillable = [
         'nev',

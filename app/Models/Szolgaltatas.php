@@ -10,6 +10,7 @@ class Szolgaltatas extends Model
 {
     use HasFactory;
     protected $table = 'szolgaltatasok';
+    public $timestamps = false;
 
     protected $fillable = [
         'nev',
