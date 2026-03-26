@@ -2,98 +2,91 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use App\Models\Felhasznalo;
+use App\Models\Dolgozo;
+use App\Models\Szolgaltatas;
+use App\Models\Idopontfoglalas;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\FoglalasLemondva;
 
 class ProfileTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
-    public function test_profile_page_is_displayed(): void
+    public function test_felhasznalo_tudja_modositani_a_profil_adatait()
     {
-        $user = User::factory()->create();
+        /** @var \App\Models\Felhasznalo $user */
+        $user = Felhasznalo::factory()->create([
+            'nev' => 'Régi Név',
+            'email' => 'regi@email.hu',
+            'telefonszam' => '06301111111'
+        ]);
+        $this->actingAs($user);
 
-        $response = $this
-            ->actingAs($user)
-            ->get('/profile');
+        $response = $this->post('/profil/update', [
+            'nev' => 'Új Név Teszt',
+            'email' => 'ujemail@teszt.hu',
+            'telefonszam' => '06309998877'
+        ]);
 
-        $response->assertOk();
+        $response->assertRedirect(route('profile.index'))
+                 ->assertSessionHas('success', 'Adatok sikeresen módosítva!');
+
+        $this->assertDatabaseHas('felhasznalo', [
+            'id' => $user->id,
+            'nev' => 'Új Név Teszt',
+            'email' => 'ujemail@teszt.hu',
+            'telefonszam' => '06309998877'
+        ]);
     }
 
-    public function test_profile_information_can_be_updated(): void
+    public function test_velemeny_iras_nem_lehetseges_ha_le_van_tiltva()
     {
-        $user = User::factory()->create();
+        /** @var \App\Models\Felhasznalo $user */
+        $user = Felhasznalo::factory()->create(['velemenyt_irhat' => 0]);
+        $this->actingAs($user);
 
-        $response = $this
-            ->actingAs($user)
-            ->patch('/profile', [
-                'name' => 'Test User',
-                'email' => 'test@example.com',
-            ]);
+        $response = $this->post('/profil/velemeny', [
+            'idopont_id' => 1,
+            'ertekeles' => 5,
+            'velemeny' => 'Nagyon jó volt!'
+        ]);
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/profile');
-
-        $user->refresh();
-
-        $this->assertSame('Test User', $user->name);
-        $this->assertSame('test@example.com', $user->email);
-        $this->assertNull($user->email_verified_at);
+        $response->assertSessionHas('error', 'Fiókodhoz a véleményírás le lett tiltva az adminisztrátor által!');
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
+    public function test_jovobeli_foglalas_lemondasa_sikeres_es_emailt_kuld()
     {
-        $user = User::factory()->create();
+        Mail::fake(); 
 
-        $response = $this
-            ->actingAs($user)
-            ->patch('/profile', [
-                'name' => 'Test User',
-                'email' => $user->email,
-            ]);
+        /** @var \App\Models\Felhasznalo $user */
+        $user = Felhasznalo::factory()->create();
+        $dolgozo = Dolgozo::factory()->create();
+        $szolgaltatas = Szolgaltatas::factory()->create();
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/profile');
+        $this->actingAs($user);
 
-        $this->assertNotNull($user->refresh()->email_verified_at);
-    }
+        $foglalas = Idopontfoglalas::create([
+            'felhasznalo_id' => $user->id,
+            'dolgozo_id' => $dolgozo->id,
+            'szolgaltatasok_id' => $szolgaltatas->id,
+            'datum' => now()->addDays(5)->format('Y-m-d'),
+            'ido_kezdes' => '10:00:00',
+            'ido_vege' => '11:00:00',
+            'statuszok_id' => 1,
+        ]);
 
-    public function test_user_can_delete_their_account(): void
-    {
-        $user = User::factory()->create();
+        $response = $this->delete('/profil/foglalas/' . $foglalas->id);
 
-        $response = $this
-            ->actingAs($user)
-            ->delete('/profile', [
-                'password' => 'password',
-            ]);
+        $response->assertStatus(200)
+                 ->assertJson(['uzenet' => 'A foglalás sikeresen törölve.']);
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/');
+        $this->assertDatabaseMissing('idopontfoglalas', [
+            'id' => $foglalas->id
+        ]);
 
-        $this->assertGuest();
-        $this->assertNull($user->fresh());
-    }
-
-    public function test_correct_password_must_be_provided_to_delete_account(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this
-            ->actingAs($user)
-            ->from('/profile')
-            ->delete('/profile', [
-                'password' => 'wrong-password',
-            ]);
-
-        $response
-            ->assertSessionHasErrorsIn('userDeletion', 'password')
-            ->assertRedirect('/profile');
-
-        $this->assertNotNull($user->fresh());
+        Mail::assertSent(FoglalasLemondva::class);
     }
 }
