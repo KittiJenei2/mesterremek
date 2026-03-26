@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Lehetoseg extends Model
 {
+    use HasFactory;
     protected $table = 'lehetosegek';
 
     protected $fillable = [

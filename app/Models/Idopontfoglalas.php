@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Idopontfoglalas extends Model
 {
+    use HasFactory;
     protected $table = 'idopontfoglalas';
     public $timestamps = false;
 
