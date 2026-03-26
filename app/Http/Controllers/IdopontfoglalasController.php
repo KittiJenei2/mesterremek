@@ -162,6 +162,10 @@ class IdopontfoglalasController extends Controller
 
     public function store(Request $request)
 {
+    // Biztonsági ellenőrzés: Ha be van jelentkezve, de nincs joga foglalni
+    if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->foglalhat == 0) {
+        return response()->json(['uzenet' => 'Fiókodhoz az időpontfoglalás le lett tiltva!'], 403);
+    }
     $request->validate([
         'szolgaltatas_id' => 'required|integer',
         'dolgozo_id' => 'required|integer',
@@ -192,15 +196,19 @@ class IdopontfoglalasController extends Controller
     ]);
 
     // --- EMAIL KÜLDÉS ---
-    Mail::to(Auth::user()->email)->send(
-        new FoglalasLetrehozva([
-            'nev' => Auth::user()->nev,
-            'szolgaltatas' => $szolgaltatas->nev,
-            'dolgozo' => $dolgozo->nev,
-            'datum' => $request->datum,
-            'ido' => $request->ido_kezdes
-        ])
-    );
+    try {
+        Mail::to(Auth::user()->email)->send(
+            new FoglalasLetrehozva([
+                'nev' => Auth::user()->nev,
+                'szolgaltatas' => $szolgaltatas->nev,
+                'dolgozo' => $dolgozo->nev,
+                'datum' => $request->datum,
+                'ido' => $request->ido_kezdes
+            ])
+        );
+    } catch (\Exception $e) {
+        \Illuminate\Support\Facades\Log::error('Email hiba: ' . $e->getMessage());
+    }
 
     return response()->json([
         'uzenet' => 'Foglalás sikeresen mentve!'

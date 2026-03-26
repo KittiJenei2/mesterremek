@@ -10,6 +10,9 @@ use App\Models\Velemeny;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\FoglalasLemondva;
+use App\Mail\FoglalasModositva;
 
 class ProfileController extends Controller
 {
@@ -34,6 +37,11 @@ public function index()
 
     public function storeFeedback(Request $request)
     {
+        // --- JOGOSULTSÁG ELLENŐRZÉSE: Véleményírás ---
+        if (\Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->velemenyt_irhat == 0) {
+            return back()->with('error', 'Fiókodhoz a véleményírás le lett tiltva az adminisztrátor által!');
+        }
+        // ---------------------------------------------
         $request->validate([
             'idopont_id' => 'required|exists:idopontfoglalas,id',
             'ertekeles' => 'required|integer|min:1|max:5',
@@ -60,7 +68,9 @@ public function index()
 
     public function cancel($id)
     {
-        $foglalas = Idopontfoglalas::where('id', $id)
+        // with() segítségével egyből betöltjük a kapcsolatokat, hogy legyen neve a dolgozónak/szolgáltatásnak a levélben
+        $foglalas = Idopontfoglalas::with(['szolgaltatas', 'dolgozo'])
+            ->where('id', $id)
             ->where('felhasznalo_id', Auth::id())
             ->first();
 
@@ -70,6 +80,21 @@ public function index()
 
         if (strtotime($foglalas->datum) < strtotime('today')) {
             return response()->json(['uzenet' => 'Múltbeli foglalást nem lehet lemondani!'], 400);
+        }
+
+        // --- EMAIL KÜLDÉS ---
+        try {
+            Mail::to(Auth::user()->email)->send(
+                new FoglalasLemondva([
+                    'nev' => Auth::user()->nev,
+                    'szolgaltatas' => $foglalas->szolgaltatas->nev,
+                    'dolgozo' => $foglalas->dolgozo->nev,
+                    'datum' => $foglalas->datum,
+                    'ido' => $foglalas->ido_kezdes
+                ])
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Lemondó email hiba: ' . $e->getMessage());
         }
 
         $foglalas->delete(); 
@@ -208,6 +233,21 @@ public function index()
         $foglalas->ido_kezdes = $ujKezdesStr;
         $foglalas->ido_vege = $ujVegeStr;
         $foglalas->save();
+
+        // --- EMAIL KÜLDÉS ---
+        try {
+            Mail::to(Auth::user()->email)->send(
+                new FoglalasModositva([
+                    'nev' => Auth::user()->nev,
+                    'szolgaltatas' => $foglalas->szolgaltatas->nev,
+                    'dolgozo' => $foglalas->dolgozo->nev,
+                    'datum' => $foglalas->datum,
+                    'uj_ido' => $ujKezdesStr // Csak hogy egyértelmű legyen
+                ])
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Módosító email hiba: ' . $e->getMessage());
+        }
 
         return back()->with('success', 'Az időpontot sikeresen módosítottuk!');
     }

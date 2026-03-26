@@ -41,4 +41,8 @@ class Dolgozo extends Authenticatable
     {
         return $this->jelszo;
     }
+    public function getAuthPasswordName()
+    {
+        return 'jelszo';
+    }
 }

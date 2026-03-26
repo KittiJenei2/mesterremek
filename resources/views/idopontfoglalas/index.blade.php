@@ -27,6 +27,16 @@
                     {{-- Visszajelzés (Siker/Hiba) --}}
                     <div id="alertMessage" class="d-none alert" role="alert"></div>
 
+                    {{-- ÚJ: Jogosultság ellenőrzése --}}
+                    @if(Auth::check() && Auth::user()->foglalhat == 0)
+                        
+                        <div class="alert alert-danger text-center p-4 rounded-3 shadow-sm mb-0 border-0">
+                            <h4 class="fw-bold mb-3"><span class="text-danger fs-1 d-block mb-2">⚠️</span>Figyelem!</h4>
+                            <p class="mb-0 fs-5">Fiókodhoz az időpontfoglalás funkció jelenleg <strong>le van tiltva</strong>.</p>
+                            <p class="text-muted mt-2 small">Kérjük, vedd fel a kapcsolatot a szalonnal a további részletekért!</p>
+                        </div>
+                        
+                    @else
                     <form id="bookingForm">
                         @csrf
 
@@ -99,6 +109,7 @@
                         </div>
 
                     </form>
+                    @endif {{-- Jogosultság vizsgálat vége --}}
                 </div>
             </div>
 

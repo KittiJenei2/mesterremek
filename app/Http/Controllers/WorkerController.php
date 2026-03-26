@@ -22,6 +22,7 @@ class WorkerController extends Controller
     {
         $dolgozo = Auth::guard('worker')->user();
 
+        // 1. Közelgő foglalások a táblázathoz (csak a jövőbeliek)
         $foglalasok = Idopontfoglalas::where('dolgozo_id', $dolgozo->id)
             ->with(['felhasznalo', 'szolgaltatas', 'statusz'])
             ->whereDate('datum', '>=', now())
@@ -29,7 +30,43 @@ class WorkerController extends Controller
             ->orderBy('ido_kezdes')
             ->get();
 
-        return view('worker.dashboard', compact('dolgozo', 'foglalasok'));
+        // 2. Az ÖSSZES foglalás a naptárhoz (hogy a múlt is látszódjon)
+        $osszesFoglalas = Idopontfoglalas::where('dolgozo_id', $dolgozo->id)
+            ->with(['felhasznalo', 'szolgaltatas'])
+            ->get();
+
+        // 3. A dolgozó szabadságai
+        $szabadsagok = Szabadsagok::where('dolgozo_id', $dolgozo->id)->get();
+
+        // --- NAPTÁR ESEMÉNYEK GENERÁLÁSA ---
+        $calendarEvents = [];
+
+        foreach ($osszesFoglalas as $f) {
+            $color = '#6c757d'; // Alap (szürke)
+            if ($f->statuszok_id == 1) $color = '#ffc107'; // Függőben (sárga)
+            elseif ($f->statuszok_id == 2) $color = '#198754'; // Elfogadva (zöld)
+            elseif ($f->statuszok_id == 4) $color = '#0d6efd'; // Elvégezve (kék)
+
+            $calendarEvents[] = [
+                'title' => $f->felhasznalo->nev . ' (' . $f->szolgaltatas->nev . ')',
+                'start' => $f->datum . 'T' . $f->ido_kezdes,
+                'end' => $f->datum . 'T' . $f->ido_vege,
+                'color' => $color,
+            ];
+        }
+
+        foreach ($szabadsagok as $sz) {
+            $calendarEvents[] = [
+                'title' => '🏖 Szabadság',
+                'start' => $sz->datum_kezdes,
+                // A FullCalendar-nál az egész napos esemény 'end' dátuma exkluzív, ezért hozzá kell adni 1 napot
+                'end' => \Carbon\Carbon::parse($sz->datum_vege)->addDay()->format('Y-m-d'),
+                'color' => '#dc3545', // Piros
+                'display' => 'block' // Kiemelt blokk
+            ];
+        }
+
+        return view('worker.dashboard', compact('dolgozo', 'foglalasok', 'calendarEvents'));
     }
 
     public function updateStatus($id)
