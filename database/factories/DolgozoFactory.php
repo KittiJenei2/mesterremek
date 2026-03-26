@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Dolgozo;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 class DolgozoFactory extends Factory
 {
@@ -12,8 +13,12 @@ class DolgozoFactory extends Factory
     public function definition(): array
     {
         return [
-            'nev' => $this->faker->name(),
-            // Ha van profilkép meződ, ide jöhet egy alapértelmezett string vagy faker kép URL
+            'nev' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'telefon' => fake()->phoneNumber(),
+            'jelszo' => Hash::make('password'), // Alapértelmezett jelszó a tesztekhez
+            'bio' => fake()->sentence(),
+            'kep' => 'default_kep.jpg',
         ];
     }
 }
