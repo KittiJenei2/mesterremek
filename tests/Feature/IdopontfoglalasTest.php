@@ -8,6 +8,7 @@ use App\Models\Felhasznalo; // User cserélve Felhasznalora
 use App\Models\Szolgaltatas;
 use App\Models\Dolgozo;
 use App\Models\Lehetoseg;
+use App\Models\Idopontfoglalas;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\FoglalasLetrehozva;
 
@@ -29,6 +30,18 @@ class IdopontfoglalasTest extends TestCase
         // 3. Ellenőrzés: 200-as kód és a helyes név visszaadása
         $response->assertStatus(200)
                  ->assertJsonFragment(['nev' => $szolgaltatas->nev]);
+    }
+
+    public function test_szakemberek_lekerese_szolgaltatas_alapjan()
+    {
+        $szolgaltatas = Szolgaltatas::factory()->create();
+        $dolgozo = Dolgozo::factory()->create();
+
+        $response = $this->json('GET', '/dolgozok-szolgaltatas-alapjan', [
+            'szolgaltatas_id' => $szolgaltatas->id
+        ]);
+
+        $response->assertStatus(200);
     }
 
     public function test_foglalas_nem_lehetseges_ha_a_felhasznalo_le_van_tiltva()
@@ -77,6 +90,33 @@ class IdopontfoglalasTest extends TestCase
         
         // Ellenőrizzük, hogy az email el lett-e "küldve" a háttérben
         Mail::assertSent(FoglalasLetrehozva::class);
+    }
+
+    public function test_foglalas_megjelenik_a_profil_fulon()
+    {
+        /** @var \App\Models\Felhasznalo $user */
+        $user = Felhasznalo::factory()->create();
+        $this->actingAs($user);
+
+        $szolgaltatas = Szolgaltatas::factory()->create();
+
+        // Foglalást manuálisan bedobjuk az adatbázisba
+        $foglalas = Idopontfoglalas::create([
+            'felhasznalo_id' => $user->id,
+            'dolgozo_id' => Dolgozo::factory()->create()->id,
+            'szolgaltatasok_id' => $szolgaltatas->id,
+            'datum' => now()->addDays(2)->format('Y-m-d'),
+            'ido_kezdes' => '10:00:00',
+            'ido_vege' => '11:00:00',
+            'statuszok_id' => 1,
+        ]);
+
+        // Megnyitjuk a Profil oldalt
+        $response = $this->get('/profil'); // Kérlek ellenőrizd az útvonalat (lehet, hogy nálad /profile)
+
+        // Ellenőrizzük, hogy kiírja-e a szolgáltatás nevét
+        $response->assertStatus(200)
+                 ->assertSee($szolgaltatas->nev);
     }
 
     public function test_szabad_idopontok_ures_ha_a_dolgozo_szabadsagon_van()

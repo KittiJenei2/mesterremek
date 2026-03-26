@@ -41,6 +41,23 @@ class AuthTest extends TestCase
         $response->assertRedirect('/idopontfoglalas'); 
     }
 
+    public function test_mukodik_a_regisztracio_es_menti_az_adatokat()
+    {
+        $response = $this->post('/register', [
+            'nev' => 'Teszt Elek',
+            'email' => 'teszt@elek.hu',
+            'telefonszam' => '06301234567',
+            'jelszo' => 'Titkos123!',          
+            'password_confirmation' => 'Titkos123!', 
+        ]);
+
+        $this->assertDatabaseHas('felhasznalo', [
+            'email' => 'teszt@elek.hu'
+        ]);
+        
+        $response->assertRedirect('/idopontfoglalas'); 
+    }
+
     public function test_felhasznalo_nem_tud_bejelentkezni_hibas_jelszoval()
     {
         $user = Felhasznalo::factory()->create([
@@ -54,6 +71,32 @@ class AuthTest extends TestCase
 
         // Ellenőrzés: A felhasználó vendég maradt (nem jelentkezett be)
         $this->assertGuest();
+    }
+
+    public function test_telefon_hibas_formatum_eseten_nem_enged_tovabb()
+    {
+        $response = $this->post('/register', [
+            'nev' => 'Teszt Elek',
+            'email' => 'teszt2@elek.hu',
+            'telefonszam' => 'ez_nem_egy_telefonszam',
+            'jelszo' => 'Titkos123!',
+            'password_confirmation' => 'Titkos123!',
+        ]);
+
+        $response->assertSessionHasErrors(['telefonszam']);
+    }
+
+    public function test_jelszo_hibas_formatum_eseten_nem_enged_tovabb()
+    {
+        $response = $this->post('/register', [
+            'nev' => 'Teszt Elek',
+            'email' => 'teszt3@elek.hu',
+            'telefonszam' => '06301234567',
+            'jelszo' => '123',
+            'password_confirmation' => '123',
+        ]);
+
+        $response->assertSessionHasErrors(['jelszo']);
     }
 
     public function test_felhasznalo_Ki_tud_jelentkezni()

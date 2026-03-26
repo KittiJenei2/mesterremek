@@ -51,16 +51,12 @@ class DolgozoTest extends TestCase
             'statuszok_id' => 1, 
         ]);
 
-        // 2. Végrehajtás: POST kérés a státusz frissítésére
-        // A from() metódussal megadjuk, honnan "kattintott" a dolgozó, hogy a back() redirect működjön
         $response = $this->from('/dolgozo/dashboard')
                          ->post("/dolgozo/foglalas/{$foglalas->id}/elfogadas");
 
-        // 3. Ellenőrzés: Visszairányít és van sikeres üzenet a session-ben
         $response->assertRedirect('/dolgozo/dashboard')
                  ->assertSessionHas('success', 'A foglalást elfogadtad.');
 
-        // Ellenőrizzük az adatbázisban, hogy a státusz 2-re (Elfogadva) változott-e
         $this->assertDatabaseHas('idopontfoglalas', [
             'id' => $foglalas->id,
             'statuszok_id' => 2 
