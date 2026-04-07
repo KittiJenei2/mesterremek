@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TermekController;
 use App\Http\Controllers\IdopontfoglalasController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -55,6 +56,8 @@ Route::view('/kapcsolat', 'kapcsolat')->name('kapcsolat');
 Route::get('/szolgaltatasok-kategoria-alapjan', [IdopontfoglalasController::class, 'szolgaltatasokKategoriaAlapjan']);
 
 Route::get('/kollegaink', [HomeController::class, 'staff'])->name('dolgozok.index');
+
+Route::get('/termekek', [TermekController::class, 'index'])->name('termekek.index');
 
 Route::middleware('auth:worker')->group(function () {
     Route::get('/dolgozo/dashboard', [WorkerController::class, 'dashboard'])->name('worker.dashboard');

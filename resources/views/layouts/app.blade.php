@@ -131,7 +131,7 @@
                 <li><a class="dropdown-item" href="{{ route('home') }}">Főoldal</a></li>
                 <li><a class="dropdown-item" href="{{ route('szolgaltatasok.index') }}">Szolgáltatások</a></li>
                 <li><a class="dropdown-item" href="{{ route('idopontfoglalas.index') }}">Időpontfoglalás</a></li>
-                
+                <li><a class="dropdown-item" href="{{ route('termekek.index') }}">Termékek</a></li>
                 {{-- Megjegyzés: A Kapcsolat route-ot nem láttam a web.php-ban, így hagyom sima linken --}}
                 <li><a class="dropdown-item" href="{{ route('dolgozok.index') }}">Munkatársaink</a></li>
                 <li><a class="dropdown-item" href="/kapcsolat">Kapcsolat</a></li>

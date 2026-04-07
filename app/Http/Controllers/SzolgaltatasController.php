@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Szolgaltatas;
-use App\Models\Lehetoseg; // Ezt be kell importálni a kategóriákhoz!
+use App\Models\Lehetoseg;
 
 class SzolgaltatasController extends Controller
 {
@@ -16,8 +16,13 @@ class SzolgaltatasController extends Controller
 
         // 2. Ha a felhasználó írt be valamit a "Keresés" mezőbe
         if ($request->filled('kereses')) {
-            $query->where('nev', 'like', '%' . $request->kereses . '%')
-                  ->orWhere('leiras', 'like', '%' . $request->kereses . '%'); // Ha van leírás oszlopod
+            $kereses = $request->kereses;
+            
+            // ITT A JAVÍTÁS: Zárójelbe tesszük a név VAGY leírás keresést!
+            $query->where(function($q) use ($kereses) {
+                $q->where('nev', 'like', '%' . $kereses . '%')
+                  ->orWhere('leiras', 'like', '%' . $kereses . '%');
+            });
         }
 
         // 3. Ha a felhasználó választott egy konkrét Kategóriát
@@ -25,7 +30,7 @@ class SzolgaltatasController extends Controller
             $query->where('lehetosegek_id', $request->kategoria);
         }
 
-        // 4. Lekérjük a szűrt adatokat
+        // 4. Lekérjük a szigorúan szűrt adatokat
         $szolgaltatasok = $query->get();
 
         // 5. Lekérjük az összes kategóriát (lehetőséget) a legördülő menühöz

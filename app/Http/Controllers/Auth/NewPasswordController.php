@@ -40,14 +40,14 @@ class NewPasswordController extends Controller
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
         $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user) use ($request) {
+            $request->only('email', 'password', 'password_confirmation'),
+            function ($user, $password) {
                 $user->forceFill([
-                    'password' => Hash::make($request->password),
-                    'remember_token' => Str::random(60),
+                    'jelszo' => Hash::make($password), // <--- ITT A VÁLTOZÁS: 'password' helyett 'jelszo'
+                    'remember_token' => \Illuminate\Support\Str::random(60),
                 ])->save();
 
-                event(new PasswordReset($user));
+                event(new \Illuminate\Auth\Events\PasswordReset($user));
             }
         );
 

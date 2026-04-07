@@ -28,4 +28,10 @@ class Felhasznalo extends Authenticable
     {
         return $this->jelszo;
     }
+
+    // Megmondja a Laravelnek az oszlop pontos nevét
+    public function getAuthPasswordName()
+    {
+        return 'jelszo';
+    }
 }
