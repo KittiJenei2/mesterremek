@@ -153,7 +153,7 @@ class IdopontfoglalasController extends Controller
             $freeTimes[] = $slotStart;
         }
 
-        $current->addMinutes(15); // 15 perces lépésköz
+        $current->addMinutes(30); // 30 perces lépésköz
     }
 
     return response()->json(['idopontok' => $freeTimes]);
