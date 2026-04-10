@@ -287,9 +287,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const dolgozoId = dolgozoSelect.value;
 
         stepIdo.classList.remove('d-none');
-        idopontokContainer.innerHTML = '<div class="spinner-border text-primary" role="status"></div>';
+        let skeletonHtml = '';
+        for(let i = 0; i < 8; i++) {
+            skeletonHtml += '<div class="skeleton-btn"></div>';
+        }
+        idopontokContainer.innerHTML = skeletonHtml;
         submitBtn.classList.add('disabled');
-
+        
         fetch('/idopontfoglalas/szabad-idopontok', {
             method: 'POST',
             headers: {
@@ -405,3 +409,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+<style>
+    /* Skeleton Loader Animáció */
+    .skeleton-btn {
+        display: inline-block;
+        width: 80px;
+        height: 38px;
+        margin: 4px;
+        border-radius: 0.375rem;
+        background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite linear;
+    }
+    
+    @keyframes skeleton-loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+</style>
