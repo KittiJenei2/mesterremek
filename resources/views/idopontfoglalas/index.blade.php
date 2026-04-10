@@ -24,10 +24,10 @@
                 
                 <div class="card-body p-4 p-lg-5">
 
-                    {{-- Visszajelzés (Siker/Hiba) --}}
+                    {{-- Visszajelzés (Hiba esetén ezt még használjuk) --}}
                     <div id="alertMessage" class="d-none alert" role="alert"></div>
 
-                    {{-- ÚJ: Jogosultság ellenőrzése --}}
+                    {{-- Jogosultság ellenőrzése --}}
                     @if(Auth::check() && Auth::user()->foglalhat == 0)
                         
                         <div class="alert alert-danger text-center p-4 rounded-3 shadow-sm mb-0 border-0">
@@ -117,6 +117,9 @@
     </div>
 </div>
 
+{{-- Ide csúsznak be a Toast értesítések (Sikeres mentéshez) --}}
+<div class="toast-container" id="toastContainer"></div>
+
 @endsection
 
 @section('scripts')
@@ -152,7 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const preSvcId = urlParams.get('service_id');
 
     if (preCatId) {
-        // Ha van kategória az URL-ben, beállítjuk és betöltjük a szolgáltatásokat
         kategoriaSelect.value = preCatId;
         loadSzolgaltatasok(preCatId, preSvcId);
     }
@@ -162,17 +164,15 @@ document.addEventListener('DOMContentLoaded', function() {
         loadSzolgaltatasok(this.value);
     });
 
-    // --- ÚJ FÜGGVÉNY: Szolgáltatások betöltése (paraméterezhető) ---
+    // Szolgáltatások betöltése
     function loadSzolgaltatasok(kategoriaId, autoSelectServiceId = null) {
         if(!kategoriaId) return;
 
-        // Reset
         resetSzolgaltatas(); 
         resetDolgozo();
         resetDatum();
         resetIdo();
 
-        // UI megjelenítés
         stepSzolgaltatas.classList.remove('d-none');
         szolgaltatasLoader.classList.remove('d-none');
         szolgaltatasSelect.disabled = true;
@@ -191,7 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 data.forEach(szolg => {
                     const ar = new Intl.NumberFormat('hu-HU').format(szolg.ar);
-                    // Megnézzük, hogy ezt kell-e automatikusan kiválasztani
                     const isSelected = (autoSelectServiceId && parseInt(autoSelectServiceId) === szolg.id) ? 'selected' : '';
                     
                     szolgaltatasSelect.innerHTML += `
@@ -202,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 szolgaltatasSelect.disabled = false;
 
-                // Ha volt automatikus kiválasztás, akkor indítsuk el a következő lépést (Dolgozók)
                 if (autoSelectServiceId) {
                     handleSzolgaltatasChange();
                 }
@@ -223,17 +221,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const serviceId = szolgaltatasSelect.value;
         if(!serviceId) return;
 
-        // Reset
         resetDolgozo();
         resetDatum();
         resetIdo();
         
-        // UI megjelenítés
         stepDolgozo.classList.remove('d-none');
         dolgozoLoader.classList.remove('d-none');
         dolgozoSelect.disabled = true;
 
-        // Fetch Dolgozók
         fetch(`/dolgozok-szolgaltatas-alapjan?szolgaltatas_id=${serviceId}`)
             .then(response => response.json())
             .then(data => {
@@ -259,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         stepDatum.classList.remove('d-none');
 
-        // Fetch Foglalható Napok
         fetch(`/foglalhato-napok?dolgozo_id=${dolgozoId}&szolgaltatas_id=${serviceId}`)
             .then(res => res.json())
             .then(dates => {
@@ -281,17 +275,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 
-    // --- 4. DÁTUM VÁLTÁSAKOR -> IDŐPONTOK LEKÉRÉSE ---
+    // --- 4. DÁTUM VÁLTÁSAKOR -> IDŐPONTOK LEKÉRÉSE (SKELETON ANIMÁCIÓVAL) ---
     function fetchFreeTimes(dateStr) {
         const serviceId = szolgaltatasSelect.value;
         const dolgozoId = dolgozoSelect.value;
 
         stepIdo.classList.remove('d-none');
-        let skeletonHtml = '';
+        
+        // Skeleton gombok kirajzolása amíg tölt az adat
+        let skeletonHtml = '<div class="w-100 d-flex flex-wrap justify-content-center gap-2">';
         for(let i = 0; i < 8; i++) {
-            skeletonHtml += '<div class="skeleton-btn"></div>';
+            skeletonHtml += '<div style="width: 70px;"><div class="skeleton-box skeleton-button"></div></div>';
         }
+        skeletonHtml += '</div>';
         idopontokContainer.innerHTML = skeletonHtml;
+        
         submitBtn.classList.add('disabled');
         
         fetch('/idopontfoglalas/szabad-idopontok', {
@@ -336,7 +334,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function resetSzolgaltatas() {
         szolgaltatasSelect.innerHTML = '<option value="" selected disabled>Betöltés...</option>';
         szolgaltatasSelect.disabled = true;
-        // stepSzolgaltatas.classList.add('d-none'); // Kivettem, hogy látszódjon a loader
     }
     function resetDolgozo() {
         dolgozoSelect.innerHTML = '<option value="" selected disabled>-- Válassz előbb szolgáltatást --</option>';
@@ -357,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.innerText = 'Foglalás véglegesítése';
     }
 
-    // --- FORM BEKÜLDÉSE ---
+    // --- FORM BEKÜLDÉSE (TOAST ÉRTESÍTÉSSEL) ---
     const form = document.getElementById('bookingForm');
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -383,24 +380,48 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-            alertBox.className = 'alert alert-success alert-custom show';
-            alertBox.innerHTML = `<strong>Siker!</strong> ${data.uzenet}`;
-            alertBox.classList.remove('d-none');
-            form.reset();
+            submitBtn.innerHTML = '✔ Foglalás rögzítve!';
+            submitBtn.classList.replace('btn-dark', 'btn-success');
             
-            // UI Reset
+            // Toast értesítés HTML generálása
+            const toastHTML = `
+                <div class="custom-toast p-3 d-flex align-items-center gap-3 mt-3">
+                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
+                        <i class="fs-5">✔</i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold text-dark">Sikeres foglalás!</h6>
+                        <small class="text-muted">${data.uzenet}</small>
+                    </div>
+                </div>
+            `;
+            
+            const container = document.getElementById('toastContainer');
+            container.innerHTML = toastHTML;
+            const toastElement = container.querySelector('.custom-toast');
+            
+            // Animáció indítása
+            setTimeout(() => toastElement.classList.add('show'), 100);
+
+            // Form törlése a háttérben
+            form.reset();
             kategoriaSelect.value = "";
             stepSzolgaltatas.classList.add('d-none'); 
             resetDolgozo();
             resetDatum();
             resetIdo();
             
-            alertBox.scrollIntoView({ behavior: 'smooth' });
+            // Átirányítás a profilra
+            setTimeout(() => {
+                window.location.href = '/profile';
+            }, 3000);
         })
         .catch(error => {
-            alertBox.className = 'alert alert-danger alert-custom show';
+            // Hiba esetén marad a piros figyelmeztető doboz
+            alertBox.className = 'alert alert-danger alert-custom show mt-3';
             alertBox.innerHTML = `<strong>Hiba:</strong> ${error.message || 'Valami nem sikerült.'}`;
             alertBox.classList.remove('d-none');
+            
             submitBtn.disabled = false;
             submitBtn.innerText = 'Próbáld újra';
         });
@@ -409,21 +430,49 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
 <style>
-    /* Skeleton Loader Animáció */
-    .skeleton-btn {
-        display: inline-block;
-        width: 80px;
-        height: 38px;
-        margin: 4px;
-        border-radius: 0.375rem;
+    /* --- SKELETON LOADER ANIMÁCIÓ --- */
+    .skeleton-box {
+        background: #e9ecef;
         background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
         background-size: 200% 100%;
-        animation: skeleton-loading 1.5s infinite linear;
+        animation: shimmer 1.5s infinite;
+        border-radius: 0.5rem;
     }
-    
-    @keyframes skeleton-loading {
+
+    .skeleton-button {
+        height: 2.5rem;
+        width: 100%;
+        border-radius: 50rem; /* Pill alakú gombhoz */
+    }
+
+    @keyframes shimmer {
         0% { background-position: 200% 0; }
         100% { background-position: -200% 0; }
     }
+
+    /* --- TOAST ÉRTESÍTÉS --- */
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
+
+    .custom-toast {
+        min-width: 300px;
+        background: white;
+        border-left: 5px solid #198754;
+        border-radius: 8px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        transform: translateX(120%);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .custom-toast.show {
+        transform: translateX(0);
+        opacity: 1;
+    }   
 </style>
