@@ -4,7 +4,7 @@
 
 {{-- Hero Szekció (Slider) --}}
 <div class="container-fluid p-0 mb-5">
-    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
         
         {{-- Indikátorok (pöttyök alul) --}}
         <div class="carousel-indicators">
@@ -20,9 +20,9 @@
                 <img src="{{ asset('images/kellekek.jpg') }}" class="d-block w-100 hero-img" alt="Szalon beltér">
                 <div class="hero-overlay"></div>
                 <div class="carousel-caption d-flex flex-column align-items-center justify-content-center h-100">
-                    <h1 class="display-3 fw-bold text-uppercase mb-3 animate-fade-up">Fresh Szalon</h1>
-                    <p class="lead mb-4 animate-fade-up delay-100">Szépség, kényelem és elegancia egy helyen.</p>
-                    <a href="{{ route('idopontfoglalas.index') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-0 animate-fade-up delay-200">
+                    <h1 class="display-3 fw-bold text-uppercase mb-3 animated-caption">Fresh Szalon</h1>
+                    <p class="lead mb-4 animated-caption delay-100">Szépség, kényelem és elegancia egy helyen.</p>
+                    <a href="{{ route('idopontfoglalas.index') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-0 animated-caption delay-200">
                         Időpontfoglalás
                     </a>
                 </div>
@@ -33,9 +33,10 @@
                 <img src="{{ asset('images/fodraszkellek.jpg') }}" class="d-block w-100 hero-img" alt="Fodrászkellékek">
                 <div class="hero-overlay"></div>
                 <div class="carousel-caption d-flex flex-column align-items-center justify-content-center h-100">
-                    <h1 class="display-3 fw-bold text-uppercase mb-3">Professzionális Eszközök</h1>
-                    <p class="lead mb-4">Csak a legjobb minőségű anyagokkal dolgozunk.</p>
-                    <a href="{{ route('szolgaltatasok.index') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-0">
+                    {{-- JAVÍTVA: Ide is betettük az animációs osztályokat --}}
+                    <h1 class="display-3 fw-bold text-uppercase mb-3 animated-caption">Professzionális Eszközök</h1>
+                    <p class="lead mb-4 animated-caption delay-100">Csak a legjobb minőségű anyagokkal dolgozunk.</p>
+                    <a href="{{ route('szolgaltatasok.index') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-0 animated-caption delay-200">
                         Szolgáltatásaink
                     </a>
                 </div>
@@ -46,9 +47,10 @@
                 <img src="{{ asset('images/csajos.jpg') }}" class="d-block w-100 hero-img" alt="Elégedett vendég">
                 <div class="hero-overlay"></div>
                 <div class="carousel-caption d-flex flex-column align-items-center justify-content-center h-100">
-                    <h1 class="display-3 fw-bold text-uppercase mb-3">Megújulás Élménye</h1>
-                    <p class="lead mb-4">Lépj be hozzánk és hagyd kint a külvilágot.</p>
-                    <a href="{{ route('idopontfoglalas.index') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-0">
+                    {{-- JAVÍTVA: Ide is betettük az animációs osztályokat --}}
+                    <h1 class="display-3 fw-bold text-uppercase mb-3 animated-caption">Megújulás Élménye</h1>
+                    <p class="lead mb-4 animated-caption delay-100">Lépj be hozzánk és hagyd kint a külvilágot.</p>
+                    <a href="{{ route('idopontfoglalas.index') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-0 animated-caption delay-200">
                         Foglalj most
                     </a>
                 </div>
@@ -68,7 +70,6 @@
     </div>
 </div>
 
-{{-- Ide jön majd a szolgáltatsáok+dolgozók rész --}}
 {{-- Munkatársak szekció --}}
 <div class="container py-5">
     <div class="text-center mb-5">
@@ -79,7 +80,6 @@
     <div class="row g-4 justify-content-center">
         @foreach ($dolgozok as $dolgozo)
             <div class="col-md-4 col-sm-6">
-                {{-- Hozzáadtuk a 'dolgozo-card' osztályt --}}
                 <div class="card h-100 border-0 shadow-sm text-center overflow-hidden dolgozo-card">
                     <div style="height: 300px; overflow: hidden;">
                         <img src="{{ asset('images/dolgozok/' .$dolgozo->kep) }}" class="w-100 h-100 object-fit-cover" alt="{{ $dolgozo->nev }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dolgozo->nev) }}&size=300';">
@@ -148,4 +148,62 @@
     </div>
 </div>
 
+{{-- CSS az animációhoz --}}
+<style>
+    /* Beúszó animáció definíciója */
+    .animate-fade-up {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Késleltetések (hogy sorban jöjjenek) */
+    .delay-100 { animation-delay: 0.2s; }
+    .delay-200 { animation-delay: 0.4s; }
+
+    /* Alapértelmezett állapot, amíg rá nem kerül az animációs osztály */
+    .animated-caption {
+        opacity: 0; 
+    }
+</style>
+
+{{-- JAVÍTÁS JAVASCRIPTTEL: Újraindítjuk az animációt minden lapozásnál --}}
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var myCarousel = document.getElementById('heroCarousel');
+    
+    // Az első slide animálása oldalbetöltéskor
+    var firstSlideCaptions = myCarousel.querySelector('.carousel-item.active').querySelectorAll('.animated-caption');
+    firstSlideCaptions.forEach(function(elem) {
+        elem.classList.add('animate-fade-up');
+    });
+
+    // Amikor elindul a csúszás (lapozás) a következő slide-ra
+    myCarousel.addEventListener('slide.bs.carousel', function (e) {
+        
+        // 1. Levesszük az animációt a MOSTANI (eltűnő) slide-ról
+        var currentCaptions = e.from !== undefined ? myCarousel.querySelectorAll('.carousel-item')[e.from].querySelectorAll('.animated-caption') : [];
+        currentCaptions.forEach(function(elem) {
+            elem.classList.remove('animate-fade-up');
+        });
+
+        // 2. Rátesszük az animációt a KÖVETKEZŐ (megjelenő) slide-ra
+        var nextCaptions = e.relatedTarget.querySelectorAll('.animated-caption');
+        nextCaptions.forEach(function(elem) {
+            // Egy apró trükk: újra kell "kényszeríteni" a böngészőt, hogy újrarajzolja az elemet
+            void elem.offsetWidth; 
+            elem.classList.add('animate-fade-up');
+        });
+    });
+});
+</script>
+@endsection
 @endsection
