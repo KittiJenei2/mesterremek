@@ -86,6 +86,7 @@
 
     .delay-100 { animation-delay: 0.2s; }
     .delay-200 { animation-delay: 0.4s; }
+    
     .brand-logo {
         font-family: 'Playfair Display', serif;
         font-size: 1.8rem;
@@ -105,7 +106,41 @@
         font-weight: 400;
         color: #555;
     }
-</style>
+
+    /* --- ÚJ: ELEGÁNS AKTÍV ÁLLAPOT A DROPDOWN MENÜHÖZ --- */
+    .dropdown-item.active, .dropdown-item:active {
+        background-color: #f8f9fa !important; /* Világosszürke háttér a rikító kék helyett */
+        color: #0d6efd !important; /* Kék szövegszín */
+        font-weight: 600; /* Vastagabb betű */
+        border-left: 3px solid #0d6efd; /* Elegáns bal oldali jelölővonal */
+    }
+
+    /* --- VISSZA A TETEJÉRE GOMB --- */
+    #scrollToTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        z-index: 1050; /* A menü alatt (1030), de a tartalom felett legyen */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.2s ease;
+    }
+
+    #scrollToTopBtn.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #scrollToTopBtn:hover {
+        transform: translateY(-5px); /* Hover effektus: kicsit felemelkedik */
+    }
+
+    </style>
 
 </head>
 
@@ -127,28 +162,28 @@
             </button>
             
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="mainMenuDropdown">
-                {{-- Általános menüpontok --}}
-                <li><a class="dropdown-item" href="{{ route('home') }}">Főoldal</a></li>
-                <li><a class="dropdown-item" href="{{ route('szolgaltatasok.index') }}">Szolgáltatások</a></li>
-                <li><a class="dropdown-item" href="{{ route('idopontfoglalas.index') }}">Időpontfoglalás</a></li>
-                <li><a class="dropdown-item" href="{{ route('termekek.index') }}">Termékek</a></li>
-                {{-- Megjegyzés: A Kapcsolat route-ot nem láttam a web.php-ban, így hagyom sima linken --}}
-                <li><a class="dropdown-item" href="{{ route('dolgozok.index') }}">Munkatársaink</a></li>
-                <li><a class="dropdown-item" href="/kapcsolat">Kapcsolat</a></li>
-
+                {{-- Általános menüpontok (Itt adtuk hozzá a route() ellenőrzést az active osztályhoz) --}}
+                <li><a class="dropdown-item {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Főoldal</a></li>
+                <li><a class="dropdown-item {{ request()->routeIs('szolgaltatasok.index') ? 'active' : '' }}" href="{{ route('szolgaltatasok.index') }}">Szolgáltatások</a></li>
+                <li><a class="dropdown-item {{ request()->routeIs('idopontfoglalas.index') ? 'active' : '' }}" href="{{ route('idopontfoglalas.index') }}">Időpontfoglalás</a></li>
+                <li><a class="dropdown-item {{ request()->routeIs('termekek.index') ? 'active' : '' }}" href="{{ route('termekek.index') }}">Termékek</a></li>
+                <li><a class="dropdown-item {{ request()->routeIs('dolgozok.index') ? 'active' : '' }}" href="{{ route('dolgozok.index') }}">Munkatársaink</a></li>
+                
+                {{-- A kapcsolatnak nincs nevesített route-ja, így az URL-t (path) vizsgáljuk --}}
+                <li><a class="dropdown-item {{ request()->is('kapcsolat') ? 'active' : '' }}" href="/kapcsolat">Kapcsolat</a></li>
 
                 <li><hr class="dropdown-divider"></li>
 
                 {{-- Vendég nézet --}}
                 @guest
-                    <li><a class="dropdown-item" href="{{ route('login') }}">Bejelentkezés</a></li>
-                    <li><a class="dropdown-item" href="{{ route('register') }}">Regisztráció</a></li>
+                    <li><a class="dropdown-item {{ request()->routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">Bejelentkezés</a></li>
+                    <li><a class="dropdown-item {{ request()->routeIs('register') ? 'active' : '' }}" href="{{ route('register') }}">Regisztráció</a></li>
                 @endguest
 
                 {{-- Bejelentkezett felhasználó --}}
                 @auth
                     <li class="dropdown-header text-muted">Fiók: {{ Auth::user()->name }}</li>
-                    <li><a class="dropdown-item" href="{{ route('profile.index') }}">Profilom</a></li>
+                    <li><a class="dropdown-item {{ request()->routeIs('profile.*') ? 'active' : '' }}" href="{{ route('profile.index') }}">Profilom</a></li>
                     
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
@@ -178,6 +213,13 @@
     </div>
 </footer>
 
+{{-- ÚJ: Vissza a tetejére (Scroll to Top) gomb --}}
+<button type="button" class="btn btn-primary rounded-circle shadow-lg d-none" id="scrollToTopBtn" aria-label="Vissza a tetejére">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+    </svg>
+</button>
+
 {{-- FLATPICKR JS --}}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/hu.js"></script>
@@ -188,3 +230,33 @@
 
 </body>
 </html>
+<script>
+// Vissza a tetejére gomb logikája
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollBtn = document.getElementById('scrollToTopBtn');
+
+    // Figyeljük a görgetést
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) { // 300px görgetés után jelenik meg
+            scrollBtn.classList.add('show');
+            scrollBtn.classList.remove('d-none');
+        } else {
+            scrollBtn.classList.remove('show');
+            // Egy kis késleltetés, hogy az opacity animáció le tudjon futni, mielőtt eltüntetjük (display: none)
+            setTimeout(() => {
+                if (window.scrollY <= 300) {
+                    scrollBtn.classList.add('d-none');
+                }
+            }, 300);
+        }
+    });
+
+    // Kattintás esemény
+    scrollBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Finom görgetés
+        });
+    });
+});
+</script>
