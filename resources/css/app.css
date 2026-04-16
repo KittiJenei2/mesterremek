@@ -1,0 +1,249 @@
+/* ==========================================================================
+   Fresh Szalon – Globális CSS
+   A projekt összes közös stílusát tartalmazó fájl.
+   ========================================================================== */
+
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* ==========================================================================
+   1. Alap stílusok & Tipográfia
+   ========================================================================== */
+
+.font-playfair {
+    font-family: 'Playfair Display', serif;
+}
+
+/* ==========================================================================
+   2. Brand & Navbar
+   ========================================================================== */
+
+.brand-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #1b1b1b;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.brand-logo:hover {
+    color: #0d6efd;
+}
+
+.brand-italic {
+    font-style: italic;
+    font-weight: 400;
+    color: #555;
+}
+
+/* Elegáns aktív állapot a dropdown menühöz */
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: #f8f9fa !important;
+    color: #0d6efd !important;
+    font-weight: 600;
+    border-left: 3px solid #0d6efd;
+}
+
+/* ==========================================================================
+   3. Hero Carousel
+   ========================================================================== */
+
+.hero-slide {
+    height: 85vh;
+    position: relative;
+}
+
+.hero-img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.carousel-caption {
+    z-index: 2;
+    bottom: 0;
+}
+
+/* ==========================================================================
+   4. Animációk
+   ========================================================================== */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-up {
+    animation: fadeUp 1s ease-out forwards;
+    opacity: 0;
+}
+
+.animated-caption {
+    opacity: 0;
+}
+
+.delay-100 { animation-delay: 0.2s; }
+.delay-200 { animation-delay: 0.4s; }
+
+/* ==========================================================================
+   5. Kártya stílusok
+   ========================================================================== */
+
+.dolgozo-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dolgozo-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15) !important;
+    z-index: 10;
+}
+
+.hover-elevate {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-elevate:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.hover-scale {
+    transition: transform 0.2s;
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* ==========================================================================
+   6. Időpont gombok
+   ========================================================================== */
+
+.idopont-btn {
+    min-width: 90px;
+    transition: 0.2s;
+}
+
+.idopont-btn.active {
+    background-color: #198754 !important;
+    color: #fff !important;
+    border-color: #198754 !important;
+    transform: scale(1.08);
+}
+
+.idopont-btn:hover {
+    transform: scale(1.04);
+}
+
+/* ==========================================================================
+   7. Form stílusok
+   ========================================================================== */
+
+.alert-custom {
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+/* ==========================================================================
+   8. Skeleton Loader
+   ========================================================================== */
+
+.skeleton-box {
+    background: #e9ecef;
+    background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 0.5rem;
+}
+
+.skeleton-button {
+    height: 2.5rem;
+    width: 100%;
+    border-radius: 50rem;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   9. Toast értesítés
+   ========================================================================== */
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.custom-toast {
+    min-width: 300px;
+    background: white;
+    border-left: 5px solid #198754;
+    border-radius: 8px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.custom-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* ==========================================================================
+   10. Scroll-to-top gomb
+   ========================================================================== */
+
+#scrollToTopBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    z-index: 1050;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.2s ease;
+}
+
+#scrollToTopBtn.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#scrollToTopBtn:hover {
+    transform: translateY(-5px);
+}

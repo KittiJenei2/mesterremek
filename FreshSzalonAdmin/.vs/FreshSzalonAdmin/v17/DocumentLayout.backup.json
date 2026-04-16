@@ -1,0 +1,228 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|c:\\xampp\\htdocs\\mesterremek\\freshszalonadmin\\freshszalonadmin\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\vendegkorlatozasform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\vendegkorlatozasform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\vendegkorlatozasform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\vendegkorlatozasform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\szolgaltatasszerkesztform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\szolgaltatasszerkesztform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\szolgaltatasszerkesztform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\szolgaltatasszerkesztform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\ujszolgaltatasform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\ujszolgaltatasform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\ujszolgaltatasform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\ujszolgaltatasform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\dolgozoszerkesztoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\dolgozoszerkesztoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\dolgozoszerkesztoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\dolgozoszerkesztoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\ujdolgozoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\ujdolgozoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\ujdolgozoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\ujdolgozoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\freshszalonadmin\\databasemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EC70CAF-5F18-47FD-813E-8514C3C86880}|FreshSzalonAdmin\\FreshSzalonAdmin.csproj|solutionrelative:freshszalonadmin\\databasemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VendegKorlatozasForm.cs",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\VendegKorlatozasForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\VendegKorlatozasForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\VendegKorlatozasForm.cs",
+              "RelativeToolTip": "FreshSzalonAdmin\\VendegKorlatozasForm.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAUwB4AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T12:39:44.791Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "VendegKorlatozasForm.cs [Design]",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\VendegKorlatozasForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\VendegKorlatozasForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\FreshSzalonAdmin\\FreshSzalonAdmin\\VendegKorlatozasForm.cs [Design]",
+              "RelativeToolTip": "..\\..\\FreshSzalonAdmin\\FreshSzalonAdmin\\VendegKorlatozasForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T12:36:05.791Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\Form1.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\Form1.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\Form1.cs [Design]",
+              "RelativeToolTip": "FreshSzalonAdmin\\Form1.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T10:51:52.812Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\Form1.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\Form1.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\Form1.cs",
+              "RelativeToolTip": "FreshSzalonAdmin\\Form1.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACIAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T10:57:35.851Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SzolgaltatasSzerkesztForm.cs [Design]",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\SzolgaltatasSzerkesztForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\SzolgaltatasSzerkesztForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\FreshSzalonAdmin\\FreshSzalonAdmin\\SzolgaltatasSzerkesztForm.cs [Design]",
+              "RelativeToolTip": "..\\..\\FreshSzalonAdmin\\FreshSzalonAdmin\\SzolgaltatasSzerkesztForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T12:41:52.662Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SzolgaltatasSzerkesztForm.cs",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\SzolgaltatasSzerkesztForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\SzolgaltatasSzerkesztForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\SzolgaltatasSzerkesztForm.cs",
+              "RelativeToolTip": "FreshSzalonAdmin\\SzolgaltatasSzerkesztForm.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAswEsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T12:45:38.528Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UjSzolgaltatasForm.cs",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjSzolgaltatasForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\UjSzolgaltatasForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjSzolgaltatasForm.cs",
+              "RelativeToolTip": "FreshSzalonAdmin\\UjSzolgaltatasForm.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAswFYAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T12:31:34.654Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UjSzolgaltatasForm.cs [Design]",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjSzolgaltatasForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\UjSzolgaltatasForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjSzolgaltatasForm.cs [Design]",
+              "RelativeToolTip": "..\\..\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjSzolgaltatasForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T12:25:43.992Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DolgozoSzerkesztoForm.cs",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\DolgozoSzerkesztoForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\DolgozoSzerkesztoForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\DolgozoSzerkesztoForm.cs",
+              "RelativeToolTip": "FreshSzalonAdmin\\DolgozoSzerkesztoForm.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAiwEoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T13:01:11.336Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DolgozoSzerkesztoForm.cs [Design]",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\DolgozoSzerkesztoForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\DolgozoSzerkesztoForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\FreshSzalonAdmin\\FreshSzalonAdmin\\DolgozoSzerkesztoForm.cs [Design]",
+              "RelativeToolTip": "..\\..\\FreshSzalonAdmin\\FreshSzalonAdmin\\DolgozoSzerkesztoForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T12:59:16.43Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UjDolgozoForm.cs [Design]",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjDolgozoForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\UjDolgozoForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjDolgozoForm.cs [Design]",
+              "RelativeToolTip": "..\\..\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjDolgozoForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T12:20:48.721Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "UjDolgozoForm.cs",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjDolgozoForm.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\UjDolgozoForm.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\UjDolgozoForm.cs",
+              "RelativeToolTip": "FreshSzalonAdmin\\UjDolgozoForm.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAWwBgAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T12:26:12.96Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "DatabaseManager.cs",
+              "DocumentMoniker": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\DatabaseManager.cs",
+              "RelativeDocumentMoniker": "FreshSzalonAdmin\\DatabaseManager.cs",
+              "ToolTip": "C:\\xampp\\htdocs\\mesterremek\\FreshSzalonAdmin\\FreshSzalonAdmin\\DatabaseManager.cs",
+              "RelativeToolTip": "FreshSzalonAdmin\\DatabaseManager.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T10:54:34.593Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
